@@ -112,7 +112,7 @@ def posts():
 
     db.user.insert_one(doc)
     print(brand_receive, item_receive, desc_receive)
-    return jsonify({'msg':'글 작성 완료!'})
+    return jsonify({'msg':'done'})
 
 #글 목록
 @app.route('/main')
