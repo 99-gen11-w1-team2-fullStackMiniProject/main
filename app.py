@@ -132,15 +132,12 @@ def posts():
     }
 
     db.user.insert_one(doc)
-    print(brand_receive, item_receive, desc_receive)
     return jsonify({'msg':'done'})
 
-#글 목록
+#글 목록 출력
 @app.route('/posts', methods=["GET"])
 def post_list():
-    print('리스트 파이썬')
     post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
-    print(post_list)
     return jsonify({'result':post_list})
 
 @app.route('/main')

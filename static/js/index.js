@@ -1,9 +1,7 @@
 // 메인 페이지
-
-$(document).ready(function () { //페이지 로딩 후 글 목록 출력
-    listing('starbucks')
+window.addEventListener('DOMContentLoaded', function(){ //페이지 로딩 후
+    listing('starbucks') //글 목록 출력
 });
-
 function refresh(){ //새로고침
     window.location.reload();
 }
@@ -41,7 +39,7 @@ function posting(){
             },
             success: function (response) {
                 let doneMsg = response['msg']
-                if(doneMsg !== 'done'){
+                if(doneMsg !== 'done'){ //완료 메세지가 없다면
                     return false
                 }else{
                     refresh()
@@ -51,7 +49,7 @@ function posting(){
     }
 }
 
-function nowSelect(targetName){
+function nowSelect(targetName){ //선택 스타일 적용 함수
     const targetClass = `.nav-${targetName}`
     const targetA = document.querySelector(targetClass)
     const navBrands = document.querySelectorAll('.nav-brand-a')
@@ -76,11 +74,11 @@ function listing(brandName){
         success: function (response) {
             let row = response['result']
             let imgSrc = '/static/images/png'
-            for(let i=0; i<row.length; i++){
+            for(let i=1; i<row.length; i++){
                 let getBrand = row[i]['brand']
                 let getItem = row[i]['item']
                 let getDesc = row[i]['desc']
-                if(getBrand === brandView){
+                if(getBrand === brandView){ //클릭한 브랜드명과 일치하는 값만 출력
                     console.log('brandView : ', brandView)
                     temp_html = `<li class="li-item">
                                     <a href="#">
