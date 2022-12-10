@@ -18,6 +18,10 @@ button:hover{
     color: #fff;
 }
 
+.now-select{
+    color: chocolate;
+}
+
 /*페이지*/
 .wrap{
     background-color: #fff3e0;
@@ -36,6 +40,13 @@ header{
 }
 .h1-logo img{
     width:50px;
+}
+.h1-logo a{
+    display: block;
+}
+.h1-logo a:hover{
+    transform: scale(1.2);
+    transition: transform .25s;
 }
 .box-info a:hover{
     color: chocolate;
@@ -135,7 +146,7 @@ header{
 }
 .li-item{
     width: 23%;
-    height: 100px;
+    height: 170px;
     overflow: hidden;
     text-align: center;
     margin-bottom: 10px;
@@ -159,7 +170,7 @@ header{
 }
 .li-item img{
     width: 100px;
-    height: 50px;
+    height: 100px;
     margin: 0 auto 5px;
 }
 .li-item span{

@@ -140,10 +140,17 @@ def posts():
     return jsonify({'msg':'done'})
 
 #글 목록
+@app.route('/posts', methods=["GET"])
+def post_list():
+    print('리스트 파이썬')
+    post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
+    print(post_list)
+    return jsonify({'result':post_list})
+
 @app.route('/main')
 def main():
-   return render_template('main.html')
+    return render_template('main.html')
 
 
 if __name__ == '__main__':
-   app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
