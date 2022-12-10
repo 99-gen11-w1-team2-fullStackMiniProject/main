@@ -6,6 +6,7 @@ import jwt #토큰생성용 패키지
 import datetime #시간관련 패키지
 import hashlib #해쉬함수용 패키지
 SECRET_KEY = 'SPARTA'
+
 client = MongoClient("mongodb+srv://test:sparta@cluster0.053coum.mongodb.net/?retryWrites=true&w=majority")
 db = client.cofee
 #디비내용
@@ -97,6 +98,23 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+@app.route('/withdraw')
+def withdraw():
+    return render_template('withdraw.html')
+#회원탈퇴
+@app.route('/api/withdraw', methods=['POST'])
+def api_withdraw():
+    id_receive = request.form['id_give']
+    pw_receive = request.form['pw-give']
+
+    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
+    result = db.user.find({'id':id_receive,'pw':pw_hash})
+    if result is not None:
+        db.user.delete_one({'id':id_receive})
+        return jsonify({'msg': '탈퇴완료'})
+    else:
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
 #*메인 페이지

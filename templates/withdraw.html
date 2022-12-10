@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, intitial-scale=1,shrink-to-fit=no">
+    <title>mypage</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <script>
+      function withdraw(){
+        let id = $('#userid').val()
+        let pw = $('#userpw').val()
+        if(id != "" && pw != ""){
+          $.ajax({
+            type:'POST',
+            url:'/api/withdraw',
+            data:{"id_give":id,"pw_give":pw},
+            success:function(response){
+              alert(response['msg'])
+            }
+          })
+        }else{
+          alert("아이디,비밀번호를 적어주세요")
+        }
+      }
+
+    </script>
+    <style>
+        .top{
+            height:130px;
+            width:100%;
+            background-color: rgb(0, 209, 178);
+        }
+        .left{
+            width:15%;
+            margin-left:20px;
+            height:100%;
+            float:left;
+            /*background-color: rgb(0, 209, 178);*/
+        }
+        .button{
+          margin-top:20px;
+        }
+
+
+        /*.right{*/
+        /*    width:80%;*/
+        /*    float:right;*/
+        /*    height:100%;*/
+        /*}*/
+
+        .bottom{
+            margin-top:20px;
+            width:100%;
+            height:100%;
+        }
+        .menu{
+            display:flex;
+            flex-direction: column;
+
+        }
+
+        html,body{
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+  <div class="top"></div>
+  <div class="bottom">
+    <div class="left">
+      <div class="menu-label"></div>
+      <div class="menu">
+        <button class="button is-primary is-medium" onclick="#">좋아요 내역</a>
+          <button class="button is-primary is-medium" onclick="location.href='/withdraw'">회원탈퇴</h1>
+      </div>
+    </div>
+    <div class="right">
+      <div class="section has-text-centered right">
+        <h1 class="title">회원탈퇴</h1>
+        <div class="container" style="width:60%">
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label" for="userid">ID</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input type="text" class="input" id="userid" aria-describedby="emailHelp"
+                         placeholder="My ID">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label" for="userpw">PW</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input type="password" class="input" id="userpw" placeholder="My Password">
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="button is-primary" onclick="withdraw()">탈퇴하기</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
