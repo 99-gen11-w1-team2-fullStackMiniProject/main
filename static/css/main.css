@@ -37,6 +37,10 @@ header{
 .h1-logo img{
     width:50px;
 }
+.box-info a:hover{
+    color: chocolate;
+    font-weight: bold;
+}
 .a-mypage{
     margin-right: 10px;
 }
@@ -100,7 +104,7 @@ header{
     flex-direction: row;
 }
 .ul-brand li{
-    margin-right: 15px;
+    margin-right: 20px;
 }
 .ul-brand li a{
     font-weight: bold;
@@ -114,14 +118,15 @@ header{
 .ul-brand li::before{
     content: "|";
     position: relative;
-    right: 6px;
+    right: 10px;
 }
 .section-list{
     border: 1px solid #808080;
     border-radius: 10px;
     padding: 20px;
     max-height: 500px;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .article-item ul{
     display: flex;
@@ -165,4 +170,9 @@ header{
 .name-item{
     margin-bottom: 5px;
     font-weight: bold;
+}
+footer{
+    margin-top: 50px;
+    text-align: center;
+    padding-bottom: 50px;
 }

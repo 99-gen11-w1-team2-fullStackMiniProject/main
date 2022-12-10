@@ -15,7 +15,7 @@
 <div class="wrap">
     <header>
         <h1 class="h1-logo">
-            <a href="#"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
+            <a href="#" title="카페인 홈으로 이동" onclick="refresh()"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
         </h1>
         <div class="box-info">
             <a href="#" class="a-mypage">마이페이지</a>
@@ -27,9 +27,9 @@
     </div>
     <div class="wrap-post">
         <div class="wrap-btn-post">
-            <button class="btn-post">글 작성</button>
+            <button class="btn-post" onclick="boxToggle()">글 작성</button>
         </div>
-        <div class="box-post">
+        <div class="box-post" id="box-post" style="display: none;">
             <div class="post-input box-brand input-group mb-3">
                 <label for="select-brand" class="input-group-text">브랜드</label>
                 <select name="select-brand" class="form-select" id="select-brand">
@@ -55,8 +55,8 @@
                 <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
             </div>
             <div class="box-btn-posting">
-                <button class="btn-add">등록</button>
-                <button class="btn-cancel">닫기</button>
+                <button class="btn-add" onclick="posting()">등록</button>
+                <button class="btn-cancel" onclick="boxToggle()">닫기</button>
             </div>
         </div>
     </div>
