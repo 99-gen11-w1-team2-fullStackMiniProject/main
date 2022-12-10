@@ -37,6 +37,10 @@ header{
 .h1-logo img{
     width:50px;
 }
+.box-info a:hover{
+    color: chocolate;
+    font-weight: bold;
+}
 .a-mypage{
     margin-right: 10px;
 }
@@ -83,4 +87,92 @@ header{
     margin-right:10px;
     background-color: #000;
     color: #fff;
+}
+
+/*네비게이션 - 글 목록*/
+.main-wrap{
+    max-width: 1000px;
+    width: 95%;
+    margin: 0 auto;
+}
+.box-nav{
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+.ul-brand{
+    display: flex;
+    flex-direction: row;
+}
+.ul-brand li{
+    margin-right: 20px;
+}
+.ul-brand li a{
+    font-weight: bold;
+}
+.ul-brand li a:hover{
+    color: chocolate;
+}
+.ul-brand li:first-child:before{
+    content: "";
+}
+.ul-brand li::before{
+    content: "|";
+    position: relative;
+    right: 10px;
+}
+.section-list{
+    border: 1px solid #808080;
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.article-item ul{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.li-item{
+    width: 23%;
+    height: 100px;
+    overflow: hidden;
+    text-align: center;
+    margin-bottom: 10px;
+    flex-basis: auto;
+}
+@media screen and (max-width:1024px){
+    .li-item{
+        width: 30%;
+    }
+}
+@media screen and (max-width:500px){
+    .li-item{
+        width: 45%;
+    }
+}
+.li-item:hover span{
+    color:chocolate;
+}
+.li-item img, .li-item span{
+    display: block;
+}
+.li-item img{
+    width: 100px;
+    height: 50px;
+    margin: 0 auto 5px;
+}
+.li-item span{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.name-item{
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+footer{
+    margin-top: 50px;
+    text-align: center;
+    padding-bottom: 50px;
 }

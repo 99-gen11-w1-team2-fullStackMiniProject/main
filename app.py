@@ -99,7 +99,25 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
 
-# 메인 페이지
+#*메인 페이지
+#글 작성
+@app.route('/posts', methods=["POST"])
+def posts():
+    brand_receive = request.form['brand_give']
+    item_receive = request.form['item_give']
+    desc_receive = request.form['desc_give']
+
+    doc = {
+        'brand':brand_receive,
+        'item':item_receive,
+        'desc':desc_receive
+    }
+
+    db.user.insert_one(doc)
+    print(brand_receive, item_receive, desc_receive)
+    return jsonify({'msg':'글 작성 완료!'})
+
+#글 목록
 @app.route('/main')
 def main():
    return render_template('main.html')
