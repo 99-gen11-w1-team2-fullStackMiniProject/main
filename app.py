@@ -12,7 +12,9 @@ db = client.cofee
 @app.route('/')
 def home():
    return render_template('login.html')
-
+@app.route('/main')
+def main():
+    return render_template('main.html')
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
