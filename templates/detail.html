@@ -1,10 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/detail.css">
+
+    <!-- Webpage Title -->
+    <title>나만 알고 있는 비밀의 커피 레시피 상세페이지</title>
+
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <script>
+
+        $(document).ready(function () {
+            show_detail();
+        });
+
+        function show_detail() {
+            $.ajax({
+                type: 'GET',
+                url: '/detail/reviewData',
+                data: {},
+                success: function (response) {
+                    let rows = response['']
+                    for (let i = 0; i < rows.length; i++) {
+                        let brand = rows[i]['brand']
+                        let content = rows[i]['content']
+                        let file = rows[i]['file']
+                        let time = rows[i]['time']
+                        let content_no = rows[i]['content_no']
+                        console.log(content_no, title, content, time, file)
+
+                    }
+                }
+            });
+        }
+
+        function save_btn() {
+            let brand = $('#select-brand').val()
+            let drink = $('#select-item').val()
+            let content = $('#textarea-desc').val()
+
+
+            $.ajax({
+                type: "POST",
+                url: "/detail",
+                data: {brand_give: brand, drink_give: drink, content_give: content},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+
+
+        function edit() {
+            $('#wrap-post').show()
+        }
+
+        function save_btn() {
+            $('#wrap-post').hide()
+        }
+
+        function edit() {
+            $('#post-box').show()
+        }
+
+    </script>
 </head>
+
 <body>
+<div class="wrap">
+    <header>
+        <h1 class="h1-logo">
+            <a href="#"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
+        </h1>
+        <div class="box-info">
+            <a href="#" class="a-mypage">마이페이지</a>
+            <a href="#">로그아웃</a>
+        </div>
+    </header>
+    <div class="box-h2">
+        <h2>나만의 커피 레시피 자랑하기</h2>
+    </div>
+    <div class="wrap-post">
+        <div class="detail">
+            <div class="show_itme">
+                <img src="..." alt="img">
+                <div class="item-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">브랜드 명 : {{brand}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">메뉴 이름 : {{menu}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">하고 싶은 말 : {{reviewNo}} {{menu_content}}
+                                content
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="box-btn-posting">
+            <button onclick="edit()" class="btn btn-outline-dark">수정</button>
+            <button onclick="delete()" class="btn btn-outline-danger">삭제</button>
+        </div>
+    </div>
+    <div class="wrap-post">
+        <div class="box-post">
+            <div class="post-input box-brand input-group mb-3">
+                <label for="select-brand" class="input-group-text">브랜드</label>
+                <select name="select-brand" class="form-select" id="select-brand">
+                    <option value="none">--카페 선택--</option>
+                    <option value="starbucks">스타벅스</option>
+                    <option value="hollys">할리스 커피</option>
+                    <option value="ediya">이디야</option>
+                    <option value="mega">메가 커피</option>
+                </select>
+            </div>
+            <div class="post-input box-item input-group mb-3">
+                <label for="select-item" class="input-group-text">커피</label>
+                <select name="select-item" id="select-item" class="form-select">
+                    <option value="none">--커피 선택--</option>
+                    <option value="espresso">에스프레소</option>
+                    <option value="americano">아메리카노</option>
+                    <option value="latte">라떼</option>
+                    <option value="cappuccino">카푸치노</option>
+                </select>
+            </div>
+            <div class="post-input box-desc form-floating">
+                <textarea name="textarea-desc" class="form-control" id="textarea-desc"
+                          placeholder="하고 싶은 말을 입력하세요."></textarea>
+                <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
+            </div>
+            <div class="box-btn-posting">
+                <button onclick="save_btn()" class="btn-add">등록</button>
+                <button onclick="close_btn()" class="btn-cancel">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>copyright by 2조</footer>
+</div>
 
 </body>
+
 </html>
