@@ -6,6 +6,7 @@ import jwt #토큰생성용 패키지
 import datetime #시간관련 패키지
 import hashlib #해쉬함수용 패키지
 SECRET_KEY = 'SPARTA'
+
 client = MongoClient("mongodb+srv://test:sparta@cluster0.053coum.mongodb.net/?retryWrites=true&w=majority")
 db = client.cofee
 #디비내용
@@ -13,6 +14,9 @@ db = client.cofee
 def home():
    return render_template('login.html')
 
+@app.route('/main')
+def main_render():
+    return render_template('main.html')
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
@@ -95,12 +99,54 @@ def api_valid():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
+@app.route('/withdraw')
+def withdraw():
+    return render_template('withdraw.html')
+#회원탈퇴
+@app.route('/api/withdraw', methods=['POST'])
+def api_withdraw():
+    id_receive = request.form['id_give']
+    pw_receive = request.form['pw-give']
 
-# 메인 페이지
+    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
+    result = db.user.find({'id':id_receive,'pw':pw_hash})
+    if result is not None:
+        db.user.delete_one({'id':id_receive})
+        return jsonify({'msg': '탈퇴완료'})
+    else:
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+
+
+#*메인 페이지
+#글 작성
+@app.route('/posts', methods=["POST"])
+def posts():
+    brand_receive = request.form['brand_give']
+    item_receive = request.form['item_give']
+    desc_receive = request.form['desc_give']
+
+    doc = {
+        'brand':brand_receive,
+        'item':item_receive,
+        'desc':desc_receive
+    }
+
+    db.user.insert_one(doc)
+    print(brand_receive, item_receive, desc_receive)
+    return jsonify({'msg':'done'})
+
+#글 목록
+@app.route('/posts', methods=["GET"])
+def post_list():
+    print('리스트 파이썬')
+    post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
+    print(post_list)
+    return jsonify({'result':post_list})
+
 @app.route('/main')
 def main():
-   return render_template('main.html')
+    return render_template('main.html')
 
 
 if __name__ == '__main__':
-   app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)

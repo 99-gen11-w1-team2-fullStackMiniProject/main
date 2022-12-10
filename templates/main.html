@@ -15,7 +15,7 @@
 <div class="wrap">
     <header>
         <h1 class="h1-logo">
-            <a href="#"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
+            <a href="#" title="카페인 홈으로 이동" onclick="refresh()"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
         </h1>
         <div class="box-info">
             <a href="#" class="a-mypage">마이페이지</a>
@@ -27,9 +27,9 @@
     </div>
     <div class="wrap-post">
         <div class="wrap-btn-post">
-            <button class="btn-post">글 작성</button>
+            <button class="btn-post" onclick="boxToggle()">글 작성</button>
         </div>
-        <div class="box-post">
+        <div class="box-post" id="box-post" style="display: none;">
             <div class="post-input box-brand input-group mb-3">
                 <label for="select-brand" class="input-group-text">브랜드</label>
                 <select name="select-brand" class="form-select" id="select-brand">
@@ -51,75 +51,32 @@
                 </select>
             </div>
             <div class="post-input box-desc form-floating">
-                <textarea name="textarea-desc" class="form-control" id="textarea-desc" placeholder="하고 싶은 말을 입력하세요."></textarea>
+                <textarea name="textarea-desc" class="form-control" id="textarea-desc" maxlength="100" placeholder="하고 싶은 말을 입력하세요."></textarea>
                 <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
             </div>
             <div class="box-btn-posting">
-                <button class="btn-add">등록</button>
-                <button class="btn-cancel">닫기</button>
+                <button class="btn-add" onclick="posting()">등록</button>
+                <button class="btn-cancel" onclick="boxToggle()">닫기</button>
             </div>
         </div>
     </div>
-    <nav>
-        <ul>
-            <li><a href="#">스타벅스</a></li>
-            <li><a href="#">할리스 커피</a></li>
-            <li><a href="#">이디야</a></li>
-            <li><a href="#">메가 커피</a></li>
-        </ul>
-    </nav>
-    <section class="section-list">
-        <article class="item">
-                <ul>
-                    <li class="li-item">
-                        <a href="#">
-                            <img src="#" alt="아이템1 이미지">
-                            <span>아이템1 이름~~~~</span>
-                            <span>아이템1 하고싶은말~~~</span>
-                        </a>
-                    </li>
-                    <li class="li-item">
-                        <a href="#">
-                            <img src="#" alt="아이템1 이미지">
-                            <span>아이템1 이름~~~~</span>
-                            <span>아이템1 하고싶은말~~~</span>
-                        </a>
-                    </li>
-                    <li class="li-item">
-                        <a href="#">
-                            <img src="#" alt="아이템1 이미지">
-                            <span>아이템1 이름~~~~</span>
-                            <span>아이템1 하고싶은말~~~</span>
-                        </a>
-                    </li>
-                </ul>
-        </article>
-        <article class="item">
-            <ul>
-                <li class="li-item">
-                    <a href="#">
-                        <img src="#" alt="아이템2 이미지">
-                        <span>아이템2 이름~~~~</span>
-                        <span>아이템2 하고싶은말~~~</span>
-                    </a>
-                </li>
-                <li class="li-item">
-                    <a href="#">
-                        <img src="#" alt="아이템2 이미지">
-                        <span>아이템2 이름~~~~</span>
-                        <span>아이템2 하고싶은말~~~</span>
-                    </a>
-                </li>
-                <li class="li-item">
-                    <a href="#">
-                        <img src="#" alt="아이템2 이미지">
-                        <span>아이템2 이름~~~~</span>
-                        <span>아이템2 하고싶은말~~~</span>
-                    </a>
-                </li>
+    <div class="main-wrap">
+        <nav class="box-nav">
+            <ul class="ul-brand">
+                <li><a href="#" class="nav-brand-a nav-starbucks" onclick="listing('starbucks')">스타벅스</a></li>
+                <li><a href="#" class="nav-brand-a nav-hollys" onclick="listing('hollys')">할리스 커피</a></li>
+                <li><a href="#" class="nav-brand-a nav-ediya" onclick="listing('ediya')">이디야</a></li>
+                <li><a href="#" class="nav-brand-a nav-mega" onclick="listing('mega')">메가 커피</a></li>
             </ul>
-    </article>
-    </section>
+        </nav>
+        <section class="section-list">
+            <article class="article-item">
+                    <ul id="box-ul-list">
+                        
+                    </ul>
+            </article>
+        </section>
+    </div>
     <footer>copyright by 2조</footer>
 </div>
 <script type="text/javascript" src="/static/js/index.js"></script>
