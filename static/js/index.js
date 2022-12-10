@@ -74,7 +74,7 @@ function listing(brandName){
         success: function (response) {
             let row = response['result']
             let imgSrc = '/static/images/png'
-            for(let i=1; i<row.length; i++){
+            for(let i=0; i<row.length; i++){
                 let getBrand = row[i]['brand']
                 let getItem = row[i]['item']
                 let getDesc = row[i]['desc']
