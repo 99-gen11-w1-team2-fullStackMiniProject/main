@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
+from pymongo import MongoClient
 
 import jwt #토큰생성용 패키지
 import datetime #시간관련 패키지
 import hashlib #해쉬함수용 패키지
 SECRET_KEY = 'SPARTA'
-
+client = MongoClient("mongodb+srv://test:sparta@cluster0.053coum.mongodb.net/?retryWrites=true&w=majority")
+db = client.cofee
+#디비내용
 @app.route('/')
 def home():
    return render_template('login.html')
@@ -20,8 +23,8 @@ def login():
 def register():
     return render_template('signup.html')
 
-
-@app.route('/api/register', methods=['POST'])
+#회원가입api
+@app.route('/api/signup', methods=['POST'])
 def api_register():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -32,6 +35,12 @@ def api_register():
     db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
 
     return jsonify({'result': 'success'})
+#중복확인api
+@app.route('/api/confrepet', methods=['GET'])
+def api_confrepet():
+    nick_id_list = list(db.user.find({},{'_id':False,'pw':False}))
+
+    return jsonify({'nick_id_list': nick_id_list})
 
 #로그인 api
 @app.route('/api/login', methods=['POST'])
@@ -51,7 +60,7 @@ def api_login():
         # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 납니다.
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=5)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
