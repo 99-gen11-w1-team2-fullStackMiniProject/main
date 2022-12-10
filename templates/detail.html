@@ -18,41 +18,37 @@
     <meta charset="UTF-8">
 
     <script>
-
         $(document).ready(function () {
-            show_detail();
+            listing();
         });
 
-        function show_detail() {
+        function listing() {
             $.ajax({
                 type: 'GET',
-                url: '/detail/reviewData',
+                url: '/posts',
                 data: {},
                 success: function (response) {
                     let rows = response['']
                     for (let i = 0; i < rows.length; i++) {
                         let brand = rows[i]['brand']
-                        let content = rows[i]['content']
-                        let file = rows[i]['file']
-                        let time = rows[i]['time']
-                        let content_no = rows[i]['content_no']
-                        console.log(content_no, title, content, time, file)
+                        let item = rows[i]['item']
+                        let desc = rows[i]['desc']
 
+                        let temp_html = ``
                     }
                 }
             });
         }
 
-        function save_btn() {
+        function posting() {
             let brand = $('#select-brand').val()
-            let drink = $('#select-item').val()
-            let content = $('#textarea-desc').val()
-
+            let item = $('#select-item').val()
+            let desc = $('#textarea-desc').val()
 
             $.ajax({
                 type: "POST",
-                url: "/detail",
-                data: {brand_give: brand, drink_give: drink, content_give: content},
+                url: "/posts",
+                data: {brand_give: brand, item_give: item, desc_give: desc},
                 success: function (response) {
                     alert(response['msg'])
                     window.location.reload()
@@ -60,18 +56,13 @@
             });
         }
 
-
-
-        function edit() {
-            $('#wrap-post').show()
-        }
-
-        function save_btn() {
-            $('#wrap-post').hide()
-        }
-
         function edit() {
             $('#post-box').show()
+        }
+
+
+        function close_box() {
+            $('#post-box').hide()
         }
 
     </script>
@@ -91,12 +82,12 @@
     <div class="box-h2">
         <h2>나만의 커피 레시피 자랑하기</h2>
     </div>
-    <div class="wrap-post">
+    <div class="content-post">
         <div class="detail">
             <div class="show_itme">
-                <img src="..." alt="img">
                 <div class="item-body">
-                    <table class="table">
+                    <img src="/static/images/mug-hot-solid.svg" alt="img" style="float: left; width: 50%; padding:10px;">
+                    <table class="table" style="float: left; width: 50%; padding:10px;">
                         <thead>
                         <tr>
                             <th scope="col">브랜드 명 : {{brand}}</th>
@@ -107,8 +98,8 @@
                             <th scope="row">메뉴 이름 : {{menu}}</th>
                         </tr>
                         <tr>
-                            <th scope="row">하고 싶은 말 : {{reviewNo}} {{menu_content}}
-                                content
+                            <th scope="row">하고 싶은 말 : {{desc}}
+                                description
                             </th>
                         </tr>
                         </tbody>
@@ -116,12 +107,13 @@
                 </div>
             </div>
         </div>
-        <div class="box-btn-posting">
-            <button onclick="edit()" class="btn btn-outline-dark">수정</button>
-            <button onclick="delete()" class="btn btn-outline-danger">삭제</button>
+        <div style="float: left; width: 100%; padding:10px;" class="box-btn-all">
+            <a href="/templates/index.html" class="btn btn-warning">Home</a>
+            <button onclick="edit()" class="btn btn-outline-warning">수정</button>
+            <button onclick="close_btn()" class="btn btn-outline-danger">삭제</button>
         </div>
     </div>
-    <div class="wrap-post">
+    <div class="wrap-post" id="post-box">
         <div class="box-post">
             <div class="post-input box-brand input-group mb-3">
                 <label for="select-brand" class="input-group-text">브랜드</label>
@@ -149,16 +141,15 @@
                 <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
             </div>
             <div class="box-btn-posting">
-                <button onclick="save_btn()" class="btn-add">등록</button>
-                <button onclick="close_btn()" class="btn-cancel">닫기</button>
+                <button onclick="posting()" class="btn btn-outline-dark">등록</button>
+                <button onclick="close_box()" class="btn btn-outline-dark">닫기</button>
             </div>
         </div>
     </div>
-</div>
 
-<footer>copyright by 2조</footer>
 </div>
 
 </body>
+
 
 </html>
