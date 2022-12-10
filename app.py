@@ -14,9 +14,9 @@ db = client.cofee
 def home():
    return render_template('login.html')
 
-@app.route('/main')
-def main_render():
-    return render_template('main.html')
+# @app.route('/main')
+# def main_render():
+#     return render_template('main.html')
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
@@ -98,7 +98,11 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
-
+#마이페이지 렌더링
+@app.route('/mypage')
+def mypage():
+    return render_template('mypage.html')
+#회원탈퇴 렌더링
 @app.route('/withdraw')
 def withdraw():
     return render_template('withdraw.html')

@@ -3,78 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, intitial-scale=1,shrink-to-fit=no">
-    <title>mypage</title>
+    <title>withdraw</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/css/mypage.css">
 
-    <script>
-      function withdraw(){
-        let id = $('#userid').val()
-        let pw = $('#userpw').val()
-        if(id != "" && pw != ""){
-          $.ajax({
-            type:'POST',
-            url:'/api/withdraw',
-            data:{"id_give":id,"pw_give":pw},
-            success:function(response){
-              alert(response['msg'])
-            }
-          })
-        }else{
-          alert("아이디,비밀번호를 적어주세요")
-        }
-      }
-
-    </script>
-    <style>
-        .top{
-            height:130px;
-            width:100%;
-            background-color: rgb(0, 209, 178);
-        }
-        .left{
-            width:15%;
-            margin-left:20px;
-            height:100%;
-            float:left;
-            /*background-color: rgb(0, 209, 178);*/
-        }
-        .button{
-          margin-top:20px;
-        }
-
-
-        /*.right{*/
-        /*    width:80%;*/
-        /*    float:right;*/
-        /*    height:100%;*/
-        /*}*/
-
-        .bottom{
-            margin-top:20px;
-            width:100%;
-            height:100%;
-        }
-        .menu{
-            display:flex;
-            flex-direction: column;
-
-        }
-
-        html,body{
-            height:100%;
-        }
-    </style>
 </head>
+
 <body>
   <div class="top"></div>
   <div class="bottom">
     <div class="left">
       <div class="menu-label"></div>
       <div class="menu">
-        <button class="button is-primary is-medium" onclick="#">좋아요 내역</a>
-          <button class="button is-primary is-medium" onclick="location.href='/withdraw'">회원탈퇴</h1>
+        <button class="button is-medium" onclick="#">좋아요 내역</a>
+          <button class="button is-medium" onclick="location.href='/withdraw'">회원탈퇴</h1>
       </div>
     </div>
     <div class="right">
@@ -106,12 +50,12 @@
               </div>
             </div>
           </div>
-          <button class="button is-primary" onclick="withdraw()">탈퇴하기</button>
+          <button class="button" onclick="withdraw()">탈퇴하기</button>
 
         </div>
       </div>
     </div>
   </div>
-
+<link rel="stylesheet" href="/static/js/withdraw.js">
 </body>
 </html>
