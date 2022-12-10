@@ -1,10 +1,166 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>register</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+        // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
+        //아이디 중복확인, 비밀번호 확인
+        function check_id(){
+            let id = $('#userid').val()
+            $.ajax({
+                type:"GET",
+                url:"/api/confrepet",
+                data:{},
+                success:function(response){
+                    let id_list = response['nick_id_list']
+                    if(id_list.length==0){
+                        $('#idcheck').val("check")
+                    }
+                    for (let i = 0; i < id_list.length; i++) {
+                        if (id != id_list[i]['id']) {
+                            $('#idcheck').val("check")
+                        } else {
+                            $('#idcheck').val("uncheck")
+                            alert("동일한 아이디가 있습니다")
+                            break;
+                        }
+                    }
+                    if($('#idcheck').val() == "check"){
+                        alert("사용가능합니다")
+                    }
+
+
+                }
+            })
+        }
+        function signup() {
+            let userpw = $('#userpw').val()
+            let re_userpw = $('#re_userpw').val()
+            if(userpw == re_userpw && $('#idcheck').val() == "check") {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/signup",
+                    data: {
+                        id_give: $('#userid').val(),
+                        pw_give: $('#userpw').val(),
+                        nickname_give: $('#usernick').val()
+                    },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert('회원가입이 완료되었습니다.')
+                            window.location.href = '/login'
+                        } else {
+                            alert(response['msg'])
+                        }
+                    }
+                })
+            }else{
+                alert("비밀번호가 다르거나 아이디중복확인이필요")
+            }
+        }
+        function check_nick(){
+            let nick = $('#usernick').val()
+            $.ajax({
+                type:"GET",
+                url:"/api/confrepet",
+                data:{},
+                success:function(response){
+                    let nick_list = response['nick_id_list']
+                    if(nick_list.length==0){
+                        $('#nickcheck').val("check")
+                    }
+                    for (let i = 0; i < nick_list.length; i++) {
+                        if (nick != nick_list[i]['nick']) {
+                            $('#nickcheck').val("check")
+                        } else {
+                            $('#nickcheck').val("uncheck")
+                            alert("동일한 닉네임이 있습니다")
+                            break;
+                        }
+                    }
+                    if($('#nickcheck').val() == "check"){
+                        alert("사용가능합니다")
+                    }
+                }
+            })
+        }
+    </script>
 </head>
 <body>
+    <div class="section has-text-centered">
+        <h1 class="title">회원가입 페이지</h1>
+        <div class="container" style="width:60%">
+            <!--아이디-->
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label" for="userid">ID</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input type="text" class="input" id="userid" aria-describedby="emailHelp"
+                                   placeholder="My ID">
+                            <input type="hidden" class="input" id="idcheck" value="uncheck">
+                        </div>
+                    </div>
+                </div>
+                <button class="button is-normal is-primary" onclick="check_id()">중복확인</button>
 
+            </div>
+            </br>
+            <!--비민번호-->
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label" for="userpw">PW</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input type="password" class="input" id="userpw" placeholder="My Password">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label" for="userpw">PW CONFIRM</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input type="password" class="input" id="re_userpw" placeholder="My Password">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </br>
+            <!--닉네임-->
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label" for="usernick">NICKNAME</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input type="text" class="input" id="usernick" placeholder="My Nickname">
+                            <input type="hidden" class="input" id="nickcheck" value="uncheck">
+                        </div>
+                    </div>
+                </div>
+                <button class="button is-normal is-primary" onclick="check_nick()">닉네임중복확인</button>
+            </div>
+            <!--버튼-->
+            <button class="button is-large is-primary" onclick="signup()">회원가입</button>
+            <button class="button is-large is-primary" onclick="location.hreg='/login'">back</button>
+        </div>
+    </div>
 </body>
 </html>
