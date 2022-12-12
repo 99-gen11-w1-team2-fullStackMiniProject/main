@@ -28,6 +28,9 @@ function posting(){
     let brand = document.querySelector('#select-brand').value
     let item = document.querySelector('#select-item').value
     let desc = document.querySelector('#textarea-desc').value
+    let selBrand = document.querySelector('#select-brand')
+    let selItem = document.querySelector('#select-item')
+    let selDesc = document.querySelector('#textarea-desc')
     if(brand === 'none' || item === 'none' || desc.replace(/\s/gi, "").length === 0){
         alert('내용을 입력하세요.')
         return false
@@ -49,7 +52,11 @@ function posting(){
                 if(doneMsg !== 'done'){
                     return false
                 }else{
-                    listing(brand)
+                    boxToggle() // 박스 닫고
+                    listing(brand) // 해당 카테고리 랜딩
+                    selBrand.value = "none"
+                    selItem.value = "none"
+                    selDesc.value = ""
                 }
             }
         })
