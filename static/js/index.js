@@ -94,7 +94,7 @@ function listing(brandName){
                 let getNick = row[i][3] // desc
                 let getIndex = row[i][0] // 고유 id 값
                 if(getBrand === brandView){
-                    temp_html = `<li class="li-item">
+                    temp_html = `<li class="li-item ${getIndex}">
                                     <button class="btn-like" onclick="likeToggle(${getIndex})">${heart.blank}</button>
                                     <a href="#">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
@@ -109,9 +109,11 @@ function listing(brandName){
     })
 }
 
+
 function likeToggle(indexNum){
     let postIndex = indexNum
-    let nickName = 'cookie nickname test'
+    let nickName = document.cookie.match('(^|;) ?' + 'nick' + '=([^;]*)(;|$)');
+    console.log(`postIndex: ${postIndex}, nickName: ${nickName}`)
     $.ajax({
         type: 'POST',
         url: '/like',
