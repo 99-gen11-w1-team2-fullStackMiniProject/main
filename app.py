@@ -2,7 +2,6 @@ import hashlib  # 해쉬함수용 패키지
 import datetime  # 시간관련 패키지
 import jwt  # 토큰생성용 패키지
 import mysql.connector
-from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 
 app = Flask(__name__)
