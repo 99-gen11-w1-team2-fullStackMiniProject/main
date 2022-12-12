@@ -2,64 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, intitial-scale=1,shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1,shrink-to-fit=no">
     <title>mypage</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
-    <script>
-    </script>
-    <style>
-        .top{
-            height:130px;
-            width:100%;
-            background-color: rgb(0, 209, 178);
-        }
-        .left{
-            width:20%;
-            height:100%;
-            float:left;
-            background-color: rgb(0, 209, 178);
-        }
-
-        .right{
-            width:80%;
-            float:right;
-            height:100%;
-        }
-
-        .bottom{
-            margin-top:20px;
-            width:100%;
-            height:100%;
-        }
-        .menu{
-            display:flex;
-            flex-direction: column;
-
-        }
-        a{
-            padding:2px;
-            font-size:2vw;
-            cursor:pointer;
-        }
-        html,body{
-            height:100%;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/css/mypage.css">
+    <script></script>
 </head>
 <body>
-    <div class="top"></div>
+    <div class="top">
+        <div class="username">
+            <h1>{{nick}}</h1>
+        </div>
+    </div>
     <div class="bottom">
         <div class="left">
             <div class="menu-label"></div>
             <div class="menu">
-                <a onclick="">좋아요 내역</a>
-                <a onclick="location.href='/withdraw'">회원탈퇴</a>
+                <button class="button is-medium" onclick="#">좋아요 내역</a>
+                    <button class="button is-medium" onclick="location.href='/withdraw'">회원탈퇴</h1>
             </div>
-
         </div>
-        <div class="right"></div>
+        <div class="right">
+            <h1></h1>
+        </div>
     </div>
 
 </body>
