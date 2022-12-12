@@ -49,7 +49,7 @@ function posting(){
                 if(doneMsg !== 'done'){
                     return false
                 }else{
-                    refresh()
+                    listing(brand)
                 }
             }
         })
