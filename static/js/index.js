@@ -90,6 +90,7 @@ function listing(brandName){
                 if(getBrand === brandView){
                     console.log('brandView : ', brandView)
                     temp_html = `<li class="li-item">
+                                    <i class='i-like heart-blank'>🤍</i>
                                     <a href="#">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
                                         <span class="name-item">${getItem}</span>
