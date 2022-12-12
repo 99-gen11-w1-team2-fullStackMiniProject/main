@@ -39,7 +39,10 @@ function posting(){
                 brand_give: brand,
                 item_give: item,
                 desc_give: desc,
-                author_give: nickName
+
+                // 제외. 서버 단에서 token으로 id값 얻기 때문
+                // author_give: nickName
+
             },
             success: function (response) {
                 let doneMsg = response['msg']
@@ -80,24 +83,27 @@ function listing(brandName){
         data: {},
         success: function (response) {
 
+            console.log(response)
             let row = response['result']
+            const userId = response['userId']
 
             let imgSrc = '/static/images/png'
-            let heart = {
-                blank:'🤍',
-                fill:'❤️'
-            }
+            // let heart = {
+            //     blank:'🤍',
+            //     fill:'❤️'
+            // }
             for(let i=0; i<row.length; i++){
                 let getBrand = row[i][1] // brand
                 let getItem = row[i][2] // item
                 let getDesc = row[i][3] // desc
                 let getNick = row[i][3] // desc
-                let getIndex = row[i][0] // 고유 id 값
-                let done = 0
+
+                let getIndex = row[i][0] // 게시글 고유 id 값
+                let liked = (row[i][7] == userId)? 1 : 0;
                 if(getBrand === brandView){
                     // done 0 일때
                     temp_html = `<li class="li-item ${getIndex}">
-                                    <button class="btn-like" onclick="likeToggle(${getIndex})">${heart.blank}</button>
+                                    <button class="btn-like" onclick="likeToggle(${getIndex})">${liked?'❤️':'🤍'}</button>
                                     <a href="#">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
                                         <span class="name-item">${getItem}</span>
@@ -123,6 +129,13 @@ function likeToggle(indexNum){
         data: {postIndex_give : postIndex, nickName_give : likeNick},
         success: function (response) {
             console.log(response['likeToggle'])
+            refresh()
         }
     })
 }
+
+function logout(){
+        $.removeCookie('mytoken');
+        alert('로그아웃!')
+        window.location.href='/login'
+      }
