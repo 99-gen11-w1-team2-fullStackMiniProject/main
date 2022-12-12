@@ -251,7 +251,12 @@ def posts():
     brand_receive = request.form['brand_give']
     item_receive = request.form['item_give']
     desc_receive = request.form['desc_give']
-    author_receive = request.form['author_give']
+
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userId = payload['id']
+
+    author_receive = userId
 
     # mongodb
     # doc = {
@@ -284,29 +289,68 @@ def post_list():
     # mongoDB
     # post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
 
-    mycursor.execute("SELECT * FROM article")
-    # fetch all from last execution
+    # mycursor.execute("SELECT * FROM article")
+
+    # 게시글에 좋아요 누른 사람 정보 가져오기
+    # - article_id 기준으로 article - article_vote 테이블 조인해서 가져오기
+    mycursor.execute("SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
     post_list = mycursor.fetchall()
 
+    # 현재 user 토큰 가져오기
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userId = payload['id']
+
     print(post_list)
-    return jsonify({'result': post_list})
+    return jsonify({'result': post_list, 'userId': userId})
 
 
 @app.route('/like', methods=["POST"])
 def likeToggle():
+
+    # 좋아요 누른 게시글 index
     postIndex_receive = request.form['postIndex_give']
-    nickName_receive = request.form['nickName_give']
+
+    # 닉네임 대신 ID에서 가져오는 걸로 수정함
+    # nickName_receive = request.form['nickName_give']
+
+    # 좋아요 누른 ID: 토큰에서 아이디 정보 얻기
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userId = payload['id']
+
+
+    # DB: 좋아요 데이터 조회
+    # - 이 유저 id가 해당 index 게시글을 누른 이력이 있냐?
+    sql = "SELECT * FROM article_vote WHERE user_id = %s AND article_id = %s"
+    mycursor.execute(sql, (userId, postIndex_receive))
+    myresult = mycursor.fetchall()
+
+    # like: DB에 like 이력이 없다면 이력 추가
+    if len(myresult) == 0:
+        print('좋아요 추가 완료')
+
+        sqlFormula = "INSERT INTO article_vote (user_id, article_id) VALUES (%s, %s)"
+        likeLog = (userId, postIndex_receive)
+        mycursor.execute(sqlFormula, likeLog)
+        mydb.commit()
+
+    # unlike: DB 이력이 있다면 해당 이력 삭제
+    else:
+        print('좋아요 취소')
+        sql = "DELETE FROM article_vote WHERE user_id = %s AND article_id = %s"
+        mycursor.execute(sql, (userId, postIndex_receive))
+        mydb.commit()
 
     # done 값을 찾아서
     # done 이 0 이면 1로 수정
     # done 이 1 이면 0으로 수정
 
-    print(postIndex_receive, nickName_receive)
 
     # vote 테이블에 저장
     # 게시글 고유 번호, 좋아요 누른 사람 닉네임, done
 
-    return jsonify({'likeToggle': postIndex_receive + ' ' + nickName_receive})
+    return jsonify({'likeToggle': postIndex_receive + ' '})
 
 
 if __name__ == '__main__':
