@@ -131,13 +131,13 @@ def posts():
         'desc':desc_receive
     }
 
-    db.user.insert_one(doc)
+    db.postList.insert_one(doc)
     return jsonify({'msg':'done'})
 
 #글 목록 출력
 @app.route('/posts', methods=["GET"])
 def post_list():
-    post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
+    post_list = list(db.postList.find({}, {'_id': False}))
     return jsonify({'result':post_list})
 
 # 저장된 게시물 삭제하기
