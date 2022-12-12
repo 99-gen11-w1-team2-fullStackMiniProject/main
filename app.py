@@ -140,10 +140,29 @@ def post_list():
     post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
     return jsonify({'result':post_list})
 
+# 저장된 게시물 삭제하기
+@app.route("/delete", methods=["POST"])
+def post_delete():
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
+    usernick = userinfo["nick"]
+    print(usernick)
+
+    brand_receive = str(request.form['brand_give'])
+    posting_list = db.user.find_one({'brand': brand_receive}, {'_id': False})
+    print(posting_list["nickname"])
+
+    if (usernick == posting_list["nickname"]):
+        db.user.delete_one({'brand': brand_receive})
+        return jsonify({'msg': '삭제 성공!'})
+    else:
+        return jsonify({'msg': '당신의 게시물이 아닙니다.'})
+
+
 @app.route('/main')
 def main():
     return render_template('main.html')
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
