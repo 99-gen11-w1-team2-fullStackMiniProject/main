@@ -165,21 +165,32 @@ def mypage():
     return a
 
 #마이페이지 좋아요 리스팅
-# @app.route('/mypage/liked')
-# def mypage_liked():
-#     #유저가 누른 좋아요 가져오기
-#     token_receive = request.cookies.get('mytoken')
-#     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#
-#     # - article_id 기준으로 article - article_vote 테이블 조인해서 가져오기
-#     #mycursor.execute("SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
-#     mycursor.execute("SELECT * FROM article_vote WHERE user_id = %s")
-#     sql = "SELECT * FROM article_vote WHERE user_id = %s"
-#     mycursor.execute(sql, (payload['id']))
-#     post_list_1 = mycursor.fetchall()
-#     #[(id,1),(id,2),(id,3)]
-#
-#     return jsonify({'result': post_list_1})
+@app.route('/mypage/liked')
+def mypage_liked():
+    #유저가 누른 좋아요 가져오기
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+    # - article_id 기준으로 article - article_vote 테이블 조인해서 가져오기
+    #mycursor.execute("SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
+    #mycursor.execute("SELECT * FROM article_vote WHERE user_id = %s")
+    sql = "SELECT * FROM article_vote WHERE user_id = %s"
+    mycursor.execute(sql, (payload['id'],))
+    post_list = mycursor.fetchall()
+
+    list=[]
+    for row in post_list:
+        row[2]
+        sql = "SELECT id, article_brand, article_item, article_desc, article_author FROM article WHERE id = %s"
+        mycursor.execute(sql, (row[2],))
+        article_list = mycursor.fetchall()
+        if article_list != []:
+            list.extend(article_list)
+
+
+
+
+    return jsonify({'article_list': list})
 
 # 회원탈퇴 렌더링
 @app.route('/withdraw')
