@@ -94,11 +94,6 @@ function listing(brandName){
             const myFavorites = response['favorite_articles'].flat(1);
             const userId = response['userId']
 
-            // console.log('row:', row)
-            // console.log('myFavorites: ', myFavorites)
-            // console.log('userId: ', userId)
-
-
             let imgSrc = '/static/images/png'
 
             for(let i=0; i<row.length; i++){
