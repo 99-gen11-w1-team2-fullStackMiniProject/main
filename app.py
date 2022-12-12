@@ -16,12 +16,11 @@ def usercheck(page_url):
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-
         sql = "SELECT * FROM user WHERE user_id = %s"
         mycursor.execute(sql, (payload['id'],))
         myresult = mycursor.fetchall()
         return render_template(page_url, nick=myresult[0][3])
-        # 여기까지>
+
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -288,7 +287,8 @@ def post_list():
 
     # 게시글에 좋아요 누른 사람 정보 가져오기
     # - article_id 기준으로 article - article_vote 테이블 조인해서 가져오기
-    mycursor.execute("SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
+    mycursor.execute(
+        "SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
     post_list = mycursor.fetchall()
 
     # 현재 user 토큰 가져오기
@@ -313,7 +313,6 @@ def likeToggle():
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     userId = payload['id']
-
 
     # DB: 좋아요 데이터 조회
     # - 이 유저 id가 해당 index 게시글을 누른 이력이 있냐?
@@ -341,13 +340,13 @@ def likeToggle():
     # done 이 0 이면 1로 수정
     # done 이 1 이면 0으로 수정
 
-
     # vote 테이블에 저장
     # 게시글 고유 번호, 좋아요 누른 사람 닉네임, done
 
     return jsonify({'likeToggle': postIndex_receive + ' '})
 
 # 삭제
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
