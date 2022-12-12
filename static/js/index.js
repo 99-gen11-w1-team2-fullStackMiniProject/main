@@ -1,5 +1,6 @@
-// 메인 페이지
+const nickName = document.querySelector('#a-mypage').getAttribute('data-value')
 
+// 메인 페이지
 $(document).ready(function () { //페이지 로딩 후 글 목록 출력
     listing('starbucks')
 });
@@ -27,7 +28,6 @@ function posting(){
     let brand = document.querySelector('#select-brand').value
     let item = document.querySelector('#select-item').value
     let desc = document.querySelector('#textarea-desc').value
-    let author = 'testNickName'
     if(brand === 'none' || item === 'none' || desc.replace(/\s/gi, "").length === 0){
         alert('내용을 입력하세요.')
         return false
@@ -39,7 +39,7 @@ function posting(){
                 brand_give: brand,
                 item_give: item,
                 desc_give: desc,
-                author_give: author
+                author_give: nickName
             },
             success: function (response) {
                 let doneMsg = response['msg']
@@ -93,7 +93,9 @@ function listing(brandName){
                 let getDesc = row[i][3] // desc
                 let getNick = row[i][3] // desc
                 let getIndex = row[i][0] // 고유 id 값
+                let done = 0
                 if(getBrand === brandView){
+                    // done 0 일때
                     temp_html = `<li class="li-item ${getIndex}">
                                     <button class="btn-like" onclick="likeToggle(${getIndex})">${heart.blank}</button>
                                     <a href="#">
@@ -102,6 +104,7 @@ function listing(brandName){
                                         <span>${getDesc}</span>
                                     </a>
                                 </li>`
+                    // done 1 일때
                     boxUl.insertAdjacentHTML("beforeend", temp_html)
                 }
             }
@@ -112,12 +115,12 @@ function listing(brandName){
 
 function likeToggle(indexNum){
     let postIndex = indexNum
-    let nickName = document.cookie.match('(^|;) ?' + 'nick' + '=([^;]*)(;|$)');
-    console.log(`postIndex: ${postIndex}, nickName: ${nickName}`)
+    let likeNick = nickName
+    console.log(`postIndex: ${postIndex}, nickName: ${likeNick}`)
     $.ajax({
         type: 'POST',
         url: '/like',
-        data: {postIndex_give : postIndex, nickName_give: nickName},
+        data: {postIndex_give : postIndex, nickName_give : likeNick},
         success: function (response) {
             console.log(response['likeToggle'])
         }

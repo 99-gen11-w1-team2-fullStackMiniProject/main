@@ -10,19 +10,29 @@ SECRET_KEY = 'SPARTA'
 
 # Database ============================================================================
 
+
 def usercheck(page_url):
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user = db.user.find_one({'id': payload['id']})
-        return render_template(page_url, nick=user['nick'])
+
+        # 진환님 기존 소스 db
+        # user = db.user.find_one({'id': payload['id']})
+        # return render_template(page_url, nick=user['nick'])
+
+        # Mysql 신규 소스로 수정 db <여기서부터
+        sql = "SELECT * FROM user WHERE user_id = %s"
+        mycursor.execute(sql, (payload['id'],))
+        myresult = mycursor.fetchall()
+        return render_template(page_url, nick=myresult[0][3])
+        # 여기까지>
+
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인정보가 없습니다"))
+# 디비내용
 
-
-#디비내용
 
 # mysql-connector-python package
 mydb = mysql.connector.connect(
@@ -42,10 +52,11 @@ def home():
     return render_template('login.html')
 
 
-
 @app.route('/main')
 def main_render():
-    return render_template('main.html')
+    page_url = "main.html"
+    a = usercheck(page_url)
+    return a
 
 
 @app.route('/login')
@@ -119,9 +130,7 @@ def api_login():
 
     # 아이디 조회 시, 없을 경우 []리턴, 있을 경우 [(id, user_id, user_pw, user_nickname)] 형식으로 리턴
 
-
     if (len(myresult) == 0):
-
 
         return jsonify({'result': 'fail', 'msg': '아이디가 없네요.'})
     if (myresult[0][2] == pw_hash):
@@ -146,7 +155,8 @@ def api_login():
 @app.route('/nick', methods=['GET'])
 def nick():
     return render_template('nicktest.html')
-#유저정보확인api
+# 유저정보확인api
+
 
 @app.route('/api/nick', methods=['GET'])
 def api_valid():
@@ -174,22 +184,26 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간 만료!!'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
-#마이페이지 렌더링
+# 마이페이지 렌더링
+
+
 @app.route('/mypage')
 def mypage():
-    page_url="mypage.html"
+    page_url = "mypage.html"
     a = usercheck(page_url)
     return a
 
 
-#회원탈퇴 렌더링
+# 회원탈퇴 렌더링
 @app.route('/withdraw')
 def withdraw():
     page_url = "withdraw.html"
     a = usercheck(page_url)
     return a
 
-#회원탈퇴 api
+# 회원탈퇴 api
+
+
 @app.route('/api/withdraw', methods=['POST'])
 def api_withdraw():
     id_receive = request.form['id_give']
@@ -283,7 +297,16 @@ def likeToggle():
     postIndex_receive = request.form['postIndex_give']
     nickName_receive = request.form['nickName_give']
 
-    return jsonify({'likeToggle': postIndex_receive + ' '+nickName_receive})
+    # done 값을 찾아서
+    # done 이 0 이면 1로 수정
+    # done 이 1 이면 0으로 수정
+
+    print(postIndex_receive, nickName_receive)
+
+    # vote 테이블에 저장
+    # 게시글 고유 번호, 좋아요 누른 사람 닉네임, done
+
+    return jsonify({'likeToggle': postIndex_receive + ' ' + nickName_receive})
 
 
 if __name__ == '__main__':
