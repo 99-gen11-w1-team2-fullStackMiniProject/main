@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 app = Flask(__name__)
 from pymongo import MongoClient
 
@@ -9,14 +9,23 @@ SECRET_KEY = 'SPARTA'
 
 client = MongoClient("mongodb+srv://test:sparta@cluster0.053coum.mongodb.net/?retryWrites=true&w=majority")
 db = client.cofee
+def usercheck(page_url):
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user = db.user.find_one({'id': payload['id']})
+        return render_template(page_url, nick=user['nick'])
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인정보가 없습니다"))
+
+
 #디비내용
 @app.route('/')
 def home():
    return render_template('login.html')
 
-# @app.route('/main')
-# def main_render():
-#     return render_template('main.html')
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
@@ -64,12 +73,12 @@ def api_login():
         # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 납니다.
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=10)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         # token을 줍니다.
-        return jsonify({'result': 'success', 'token': token})
+        return jsonify({'result': 'success','nick':result['nick'], 'token': token})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -79,18 +88,9 @@ def api_login():
 @app.route('/api/nick', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
-
-    # try / catch 문?
-    # try 아래를 실행했다가, 에러가 있으면 except 구분으로 가란 얘기입니다.
-
     try:
-        # token을 시크릿키로 디코딩합니다.
-        # 보실 수 있도록 payload를 print 해두었습니다. 우리가 로그인 시 넣은 그 payload와 같은 것이 나옵니다.
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         print(payload)
-
-        # payload 안에 id가 들어있습니다. 이 id로 유저정보를 찾습니다.
-        # 여기에선 그 예로 닉네임을 보내주겠습니다.
         userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
         return jsonify({'result': 'success', 'nickname': userinfo['nick']})
     except jwt.ExpiredSignatureError:
@@ -101,11 +101,28 @@ def api_valid():
 #마이페이지 렌더링
 @app.route('/mypage')
 def mypage():
-    return render_template('mypage.html')
+    page_url="mypage.html"
+    a = usercheck(page_url)
+    return a
+    # token_receive = request.cookies.get('mytoken')
+    # try:
+    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    #     user = db.user.find_one({'id': payload['id']})
+    #     return render_template(page_url, nick = user['nick'])
+    # except jwt.ExpiredSignatureError:
+    #     return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    # except jwt.exceptions.DecodeError:
+    #     return redirect(url_for("login", msg="로그인정보가 없습니다"))
+
+
+
 #회원탈퇴 렌더링
 @app.route('/withdraw')
 def withdraw():
-    return render_template('withdraw.html')
+    page_url = "withdraw.html"
+    a = usercheck(page_url)
+    return a
+
 #회원탈퇴
 @app.route('/api/withdraw', methods=['POST'])
 def api_withdraw():

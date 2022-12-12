@@ -2,31 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, intitial-scale=1,shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1,shrink-to-fit=no">
     <title>mypage</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <link rel="stylesheet" href="/static/css/mypage.css">
-
+    <script></script>
 </head>
 <body>
-
-
-
-    <div class="top"></div>
-  <div class="bottom">
-    <div class="left">
-      <div class="menu-label"></div>
-      <div class="menu">
-        <button class="button is-medium" onclick="#">좋아요 내역</a>
-          <button class="button is-medium" onclick="location.href='/withdraw'">회원탈퇴</h1>
-      </div>
+    <div class="top">
+        <div class="username">
+            <h1>{{nick}}</h1>
+        </div>
     </div>
-    <div class="right">
-
+    <div class="bottom">
+        <div class="left">
+            <div class="menu-label"></div>
+            <div class="menu">
+                <button class="button is-medium" onclick="#">좋아요 내역</a>
+                    <button class="button is-medium" onclick="location.href='/withdraw'">회원탈퇴</h1>
+            </div>
+        </div>
+        <div class="right">
+            <h1></h1>
+        </div>
     </div>
-  </div>
 
 </body>
 </html>

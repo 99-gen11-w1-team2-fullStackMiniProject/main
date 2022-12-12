@@ -11,6 +11,12 @@
     float: left;
     /*background-color: rgb(0, 209, 178);*/
 }
+.username{
+    position:absolute;
+    right:0;
+    width:100px;
+    background-color: yellow;
+}
 
 .button {
     background-color: #ccc0ae;

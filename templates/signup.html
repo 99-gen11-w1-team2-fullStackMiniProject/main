@@ -9,13 +9,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
+    <link rel="stylesheet" href="/static/css/signup.css">
     <script>
         // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
         //아이디 중복확인, 비밀번호 확인
         function check_id(){
             let id = $('#userid').val()
-            $.ajax({
+            if(id != "" && id.length >= 3){
+                $.ajax({
                 type:"GET",
                 url:"/api/confrepet",
                 data:{},
@@ -40,6 +41,10 @@
 
                 }
             })
+            }else{
+                alert("아이디가 너무 짧습니다")
+            }
+
         }
         function signup() {
             let userpw = $('#userpw').val()
@@ -112,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="button is-normal is-primary" onclick="check_id()">중복확인</button>
+                <button class="button is-normal" onclick="check_id()">중복확인</button>
 
             </div>
             </br>
@@ -155,11 +160,11 @@
                         </div>
                     </div>
                 </div>
-                <button class="button is-normal is-primary" onclick="check_nick()">닉네임중복확인</button>
+                <button class="button is-normal" onclick="check_nick()">닉네임중복확인</button>
             </div>
             <!--버튼-->
-            <button class="button is-large is-primary" onclick="signup()">회원가입</button>
-            <button class="button is-large is-primary" onclick="location.hreg='/login'">back</button>
+            <button class="button is-large" onclick="signup()">회원가입</button>
+            <button class="button is-large" onclick="location.hreg='/login'">back</button>
         </div>
     </div>
 </body>
