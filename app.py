@@ -16,17 +16,12 @@ def usercheck(page_url):
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-        # 진환님 기존 소스 db
-        # user = db.user.find_one({'id': payload['id']})
-        # return render_template(page_url, nick=user['nick'])
 
-        # Mysql 신규 소스로 수정 db <여기서부터
         sql = "SELECT * FROM user WHERE user_id = %s"
         mycursor.execute(sql, (payload['id'],))
         myresult = mycursor.fetchall()
         return render_template(page_url, nick=myresult[0][3])
         # 여기까지>
-
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -101,13 +96,13 @@ def api_confrepet():
     # nick_id_list = list(db.user.find({},{'_id':False,'pw':False}))
 
     # mysql
-    sql = "SELECT user_name FROM user"
+    sql = "SELECT user_id,user_name FROM user"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
 
-    nick_id_list = myresult
+    id_nick_list = myresult
 
-    return jsonify({'nick_id_list': nick_id_list})
+    return jsonify({'id_nick_list': id_nick_list})
 
 # 로그인 api
 
