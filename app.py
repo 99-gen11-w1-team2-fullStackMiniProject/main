@@ -150,11 +150,11 @@ def post_delete():
     print(usernick)
 
     brand_receive = str(request.form['brand_give'])
-    posting_list = db.user.find_one({'brand': brand_receive}, {'_id': False})
+    posting_list = db.postList.find_one({'brand': brand_receive}, {'_id': False})
     print(posting_list["nickname"])
 
     if (usernick == posting_list["nickname"]):
-        db.user.delete_one({'brand': brand_receive})
+        db.postList.delete_one({'brand': brand_receive})
         return jsonify({'msg': '삭제 성공!'})
     else:
         return jsonify({'msg': '당신의 게시물이 아닙니다.'})
