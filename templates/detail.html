@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/detail.css">
     <!-- Webpage Title -->
-    <title>나만 알고 있는 비밀의 커피 레시피 상세페이지</title>
+    <title>커피 레시피 상세페이지</title>
 
 </head>
 
@@ -32,6 +32,7 @@
                     let desc = rows[i]['desc']
                     let nick = rows[i]['nick']
                     let index = rows[i]['index']
+
 
                     let temp_html = `<thead>
                                         <tr>
@@ -93,6 +94,19 @@
         });
     }
 
+    //detail_삭제
+    function delete_btn(num) {
+        $.ajax({
+            type: "POST",
+            url: "/delete",
+            data: {num_give: num},
+            success: function (response) {
+                alert("삭제완료")
+                location.replace("/")
+            }
+        });
+    }
+
     function edit() {
         $('#box-post').show()
     }
@@ -108,15 +122,15 @@
 <div class="wrap">
     <header>
         <h1 class="h1-logo">
-             <a href="#" title="카페인 홈으로 이동" onclick="refresh()"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
+            <a href="#" title="카페인 홈으로 이동" onclick="refresh()"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
         </h1>
         <div class="box-info">
             <a href="/mypage" class="a-mypage" id="a-mypage" data-value="{{nick}}">마이페이지</a>
             <a href="#">로그아웃</a>
-            </div>
+        </div>
     </header>
     <div class="box-h2">
-        <h2>나만의 커피 레시피 자랑하기</h2>
+        <h2>비밀의 레시피</h2>
     </div>
     <div class="content-post">
         <div class="detail">
@@ -140,7 +154,7 @@
                             <th scope="row">메뉴 이름 : {{menu}}</th>
                         </tr>
                         <tr>
-                            <th scope="row">나만의 레시피 추가하기 : {{desc}}
+                            <th scope="row">레시피 추가하기 : {{desc}}
                             </th>
                         </tr>
                         </tbody>
@@ -150,7 +164,7 @@
         </div>
         <div class="box-btn-all">
             <button onclick="edit()" class="btn btn-outline-dark">수정</button>
-            <button onclick="delete_btn()" class="btn btn-outline-danger">삭제</button>
+            <button onclick="delete_btn($(num))" class="btn btn-outline-danger">삭제</button>
         </div>
     </div>
     <div class="wrap-post" id="box-post" style="display: none;">
