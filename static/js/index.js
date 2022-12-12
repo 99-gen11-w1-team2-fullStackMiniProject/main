@@ -27,6 +27,7 @@ function posting(){
     let brand = document.querySelector('#select-brand').value
     let item = document.querySelector('#select-item').value
     let desc = document.querySelector('#textarea-desc').value
+    let author = 'testNickName'
     if(brand === 'none' || item === 'none' || desc.replace(/\s/gi, "").length === 0){
         alert('내용을 입력하세요.')
         return false
@@ -37,7 +38,8 @@ function posting(){
             data: {
                 brand_give: brand,
                 item_give: item,
-                desc_give: desc
+                desc_give: desc,
+                author_give: author
             },
             success: function (response) {
                 let doneMsg = response['msg']
@@ -79,18 +81,21 @@ function listing(brandName){
         success: function (response) {
 
             let row = response['result']
-            console.log(row)
 
             let imgSrc = '/static/images/png'
-
+            let heart = {
+                blank:'🤍',
+                fill:'❤️'
+            }
             for(let i=0; i<row.length; i++){
                 let getBrand = row[i][1] // brand
                 let getItem = row[i][2] // item
                 let getDesc = row[i][3] // desc
+                let getNick = row[i][3] // desc
+                let getIndex = row[i][0] // 고유 id 값
                 if(getBrand === brandView){
-                    console.log('brandView : ', brandView)
                     temp_html = `<li class="li-item">
-                                    <i class='i-like heart-blank'>🤍</i>
+                                    <button class="btn-like" onclick="likeToggle(${getIndex})">${heart.blank}</button>
                                     <a href="#">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
                                         <span class="name-item">${getItem}</span>
@@ -100,6 +105,19 @@ function listing(brandName){
                     boxUl.insertAdjacentHTML("beforeend", temp_html)
                 }
             }
+        }
+    })
+}
+
+function likeToggle(indexNum){
+    let postIndex = indexNum
+    let nickName = 'cookie nickname test'
+    $.ajax({
+        type: 'POST',
+        url: '/like',
+        data: {postIndex_give : postIndex, nickName_give: nickName},
+        success: function (response) {
+            console.log(response['likeToggle'])
         }
     })
 }
