@@ -109,7 +109,6 @@ function listing(brandName){
     })
 }
 
-
 function likeToggle(indexNum, likeBrand){
     let postIndex = indexNum
     let getBrandName = likeBrand
