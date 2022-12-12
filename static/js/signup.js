@@ -1,7 +1,7 @@
 // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
 //아이디 중복확인, 비밀번호 확인
-const reg_id = /허용하는 문자/
-const reg_pw = /허용하는 문자/
+// const reg_id = /허용하는 문자/
+// const reg_pw = /허용하는 문자/ 시간남으면 하자
 function check_id() {
 
     let id = $('#userid').val()
