@@ -146,20 +146,22 @@ header{
 }
 .li-item{
     width: 23%;
-    height: 170px;
+    height: 180px;
     overflow: hidden;
     text-align: center;
     margin: 0 15px 10px 0;
     flex-basis: auto;
 }
-.i-like{
-    width: 15px;
-    height: 15px;
+.btn-like{
     position: relative;
-    top: 19px;
-    LEFT: -38px;
-    cursor: pointer;
-    font-size: 18px;
+    top: 26px;
+    left: -37px;
+    font-size: 20px;
+    border: none;
+    padding: 5px;
+}
+.btn-like:hover{
+    background-color: transparent;
 }
 @media screen and (max-width:1024px){
     .li-item{
