@@ -50,6 +50,7 @@ header {
     max-width: 400px;
     width: 95%;
     clear: both;
+    display: None;
 }
 
 .content-post {
