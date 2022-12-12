@@ -13,50 +13,8 @@
 <!-- Webpage Title -->
 <title>나만 알고 있는 비밀의 커피 레시피 상세페이지</title>
 
-<meta charset="UTF-8">
-
 
 <script>
-    $(document).ready(function () {
-        show_detial();
-    });
-
-    function getId() {
-        const urlParams = new URLSearchParams(location.search);
-        console.log(urlParams.get('brand'));
-        return urlParams.get('brand');
-    }
-
-
-    function show_detial() {
-        $.ajax({
-            type: 'GET',
-            url: '/posts',
-            data: {},
-            success: function (response) {
-                console.log(response['post'])
-            }
-        })
-    }
-
-    function edit_posting() {
-        let brand = $('#select-brand').val()
-        let item = $('#select-item').val()
-        let desc = $('#select-desc').val()
-
-        $.ajax({
-            type: 'POST',
-            url: '/posts',
-            data: {brand_give: brand, itme_give: item, desc_give: desc},
-            success: function (response) {
-                alert(response['msg'])
-                let postnum = response['postnum']
-                window.location.href = '/index?postnum=' + postnum;
-            }
-        });
-    }
-
-
     function delete_btn() {
         $.ajax({
             type: 'POST',
@@ -126,8 +84,13 @@
             <button onclick="delete_btn()" class="btn btn-outline-danger">삭제</button>
         </div>
     </div>
+<<<<<<< HEAD
     <div class="wrap-post" id="post-box">
         <div class="box-post" id="box-post" style="display: none;">
+=======
+    <div class="wrap-post" id="post-box" >
+        <div class="box-post">
+>>>>>>> feature/detail
             <div class="post-input box-brand input-group mb-3">
                 <label for="select-brand" class="input-group-text">브랜드</label>
                 <select name="select-brand" class="form-select" id="select-brand">
