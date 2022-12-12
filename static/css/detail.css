@@ -46,40 +46,55 @@ header {
 }
 
 .wrap-post {
+   margin: 40px auto;
+    max-width: 400px;
+    width: 95%;
+}
+
+.wrap-post > .post-input{
+    display: flex;
+    justify-content: space-between;
+}
+
+.detail {
     margin: 40px auto 0;
     max-width: 400px;
     width: 95%;
-}
-
-.content-post {
-   margin: 40px auto 0;
-    max-width: 400px;
-    width: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .box-btn-all {
+   margin-top: 20px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: center;
 
-    margin-bottom: 10px;
 }
 
-.box-btn-all > button{
+.box-btn-all > .btn-outline-dark{
     margin-right: 10px;
-    margin-left: 10px;
+    background-color: #000;
+    color: #fff3e0;
 }
 
 .box-btn-posting {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    max-width: 400px;
+    width: 95%;
+    margin: auto;
+    text-align: center;
 
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
-.box-btn-posting > button {
-    margin-right: 10px;
+.box-btn-posting{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+.box-btn-posting > .btn-dark {
+    margin-right:10px;
+    background-color: #000;
+    color: #fff3e0;
+
 }

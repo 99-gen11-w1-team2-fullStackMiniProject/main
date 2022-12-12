@@ -7,7 +7,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/css/reset.css">
-    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/detail.css">
     <!-- Webpage Title -->
     <title>나만 알고 있는 비밀의 커피 레시피 상세페이지</title>
 
@@ -17,6 +17,7 @@
     $(document).ready(function () {
         listing();
     });
+
     //상세내용불러오기
     function listing() {
         $.ajax({
@@ -48,7 +49,7 @@
                                             <th scope="row">메뉴 이름 :  ${item}</th>
                                         </tr>
                                         <tr>
-                                            <th scope="row">하고 싶은 말 :  ${desc}
+                                            <th scope="row">나만의 레시피 추가하기 :  ${desc}
                                             </th>
                                         </tr>
                                     </tbody>`
@@ -57,6 +58,7 @@
             }
         });
     }
+
     //수정하기
     function edit_posting() {
         let brand = $('#select-brand').val()
@@ -74,7 +76,6 @@
         form_data.append("index_give", index)
         console.log(image, index, nick, brand, item, desc)
 
-
         $.ajax({
             type: 'POST',
             url: '/posts',
@@ -91,13 +92,10 @@
             }
         });
     }
-    //삭제
-
 
     function edit() {
         $('#box-post').show()
     }
-
 
     function close_box() {
         $('#box-post').hide()
@@ -110,11 +108,12 @@
 <div class="wrap">
     <header>
         <h1 class="h1-logo">
+             <a href="#" title="카페인 홈으로 이동" onclick="refresh()"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
         </h1>
         <div class="box-info">
-            <a href="#" class="a-mypage">마이페이지</a>
+            <a href="/mypage" class="a-mypage" id="a-mypage" data-value="{{nick}}">마이페이지</a>
             <a href="#">로그아웃</a>
-        </div>
+            </div>
     </header>
     <div class="box-h2">
         <h2>나만의 커피 레시피 자랑하기</h2>
@@ -141,8 +140,7 @@
                             <th scope="row">메뉴 이름 : {{menu}}</th>
                         </tr>
                         <tr>
-                            <th scope="row">하고 싶은 말 : {{desc}}
-                                description
+                            <th scope="row">나만의 레시피 추가하기 : {{desc}}
                             </th>
                         </tr>
                         </tbody>
@@ -151,8 +149,7 @@
             </div>
         </div>
         <div class="box-btn-all">
-            <a href="/templates/main.html" class="btn btn-warning">Home</a>
-            <button onclick="edit()" class="btn btn-outline-warning">수정</button>
+            <button onclick="edit()" class="btn btn-outline-dark">수정</button>
             <button onclick="delete_btn()" class="btn btn-outline-danger">삭제</button>
         </div>
     </div>
@@ -183,8 +180,8 @@
             <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
         </div>
         <div class="box-btn-posting">
-            <button class="btn-add" onclick="edit_posting()">등록</button>
-            <button class="btn-cancel" onclick="close_box()">닫기</button>
+            <button class="btn btn-dark" onclick="edit_posting()">등록</button>
+            <button class="btn btn-outline-dark" onclick="close_box()">닫기</button>
         </div>
     </div>
 </div>
