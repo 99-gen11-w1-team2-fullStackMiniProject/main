@@ -8,32 +8,99 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/main.css">
+    <!-- Webpage Title -->
+    <title>나만 알고 있는 비밀의 커피 레시피 상세페이지</title>
+
 </head>
 
-<!-- Webpage Title -->
-<title>나만 알고 있는 비밀의 커피 레시피 상세페이지</title>
-
-
 <script>
-    function delete_btn() {
+    $(document).ready(function () {
+        listing();
+    });
+    //상세내용불러오기
+    function listing() {
         $.ajax({
-            type: 'POST',
-            url: '/delete',
-            data: {brand_give: getId()},
+            type: 'GET',
+            url: '/posts={{ index }}',
+            data: {},
             success: function (response) {
-                alert(response['msg'])
-                window.location.href = '/'
+                let rows = response['']
+                for (let i = 0; i < rows.length; i++) {
+                    let brand = rows[i]['comment']
+                    let item = rows[i]['name']
+                    let desc = rows[i]['desc']
+                    let nick = rows[i]['nick']
+                    let index = rows[i]['index']
+
+                    let temp_html = `<thead>
+                                        <tr>
+                                            <th scope="col">no : ${index}</th>
+                                        </tr>
+                                        </thead>
+                                    <tbody>
+                                         <tr>
+                                            <th scope="row">유저 이름 : ${nick}</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">브랜드 이름 :  ${brand}</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">메뉴 이름 :  ${item}</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">하고 싶은 말 :  ${desc}
+                                            </th>
+                                        </tr>
+                                    </tbody>`
+                    $('#content-box').append(temp_html)
+                }
             }
         });
     }
+    //수정하기
+    function edit_posting() {
+        let brand = $('#select-brand').val()
+        let item = $('#select-item').val()
+        let desc = $('#textarea-desc').val()
+        let image = $('#image').val()
+        let index = $('#index').val()
+        let nick = $('#nick').val()
+        let form_data = new FormData()
+        form_data.append("brand_give", brand)
+        form_data.append("item_give", item)
+        form_data.append("desc_give", desc)
+        form_data.append("nick_give", nick)
+        form_data.append("image_give", image)
+        form_data.append("index_give", index)
+        console.log(image, index, nick, brand, item, desc)
+
+
+        $.ajax({
+            type: 'POST',
+            url: '/posts',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response["result"] == "success") {
+                    alert(response["msg"])
+                    window.location.reload()
+
+                }
+            }
+        });
+    }
+    //삭제
+
 
     function edit() {
-        $('#post-box').show()
+        $('#box-post').show()
     }
 
 
     function close_box() {
-        $('#post-box').hide()
+        $('#box-post').hide()
     }
 
 </script>
@@ -55,16 +122,21 @@
     <div class="content-post">
         <div class="detail">
             <div class="show_itme">
-                <div class="item-body" id="item-post">
-                    <img src="/static/images/mug-hot-solid.svg" alt="img"
-                         style="float: left; width: 50%; padding:10px;">
-                    <table class="table" style="float: left; width: 50%; padding:10px;">
+                <div class="item-body" id="content-box">
+                    <img src="..." alt="img">
+                    <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">브랜드 명 : {{brand}}</th>
+                            <th scope="col">no : {{index}}</th>
                         </tr>
                         </thead>
                         <tbody>
+                        <tr>
+                            <th scope="col">유저 닉네임 : {{nick}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">브랜드 이름 : {{brand}}</th>
+                        </tr>
                         <tr>
                             <th scope="row">메뉴 이름 : {{menu}}</th>
                         </tr>
@@ -78,48 +150,43 @@
                 </div>
             </div>
         </div>
-        <div style="float: left; width: 100%; padding:10px;" class="box-btn-all">
+        <div class="box-btn-all">
             <a href="/templates/main.html" class="btn btn-warning">Home</a>
             <button onclick="edit()" class="btn btn-outline-warning">수정</button>
             <button onclick="delete_btn()" class="btn btn-outline-danger">삭제</button>
         </div>
     </div>
-
-
-    <div class="wrap-post" id="post-box" >
-        <div class="box-post">
-            <div class="post-input box-brand input-group mb-3">
-                <label for="select-brand" class="input-group-text">브랜드</label>
-                <select name="select-brand" class="form-select" id="select-brand">
-                    <option value="none">--카페 선택--</option>
-                    <option value="starbucks">스타벅스</option>
-                    <option value="hollys">할리스 커피</option>
-                    <option value="ediya">이디야</option>
-                    <option value="mega">메가 커피</option>
-                </select>
-            </div>
-            <div class="post-input box-item input-group mb-3">
-                <label for="select-item" class="input-group-text">커피</label>
-                <select name="select-item" id="select-item" class="form-select">
-                    <option value="none">--커피 선택--</option>
-                    <option value="espresso">에스프레소</option>
-                    <option value="americano">아메리카노</option>
-                    <option value="latte">라떼</option>
-                    <option value="cappuccino">카푸치노</option>
-                </select>
-            </div>
-            <div class="post-input box-desc form-floating">
+    <div class="wrap-post" id="box-post" style="display: none;">
+        <div class="post-input box-brand input-group mb-3">
+            <label for="select-brand" class="input-group-text">브랜드</label>
+            <select name="select-brand" class="form-select" id="select-brand">
+                <option value="none">--카페 선택--</option>
+                <option value="starbucks">스타벅스</option>
+                <option value="hollys">할리스 커피</option>
+                <option value="ediya">이디야</option>
+                <option value="mega">메가 커피</option>
+            </select>
+        </div>
+        <div class="post-input box-item input-group mb-3">
+            <label for="select-item" class="input-group-text">커피</label>
+            <select name="select-item" id="select-item" class="form-select">
+                <option value="none">--커피 선택--</option>
+                <option value="espresso">에스프레소</option>
+                <option value="americano">아메리카노</option>
+                <option value="latte">라떼</option>
+                <option value="cappuccino">카푸치노</option>
+            </select>
+        </div>
+        <div class="post-input box-desc form-floating">
                 <textarea name="textarea-desc" class="form-control" id="textarea-desc" maxlength="100"
                           placeholder="하고 싶은 말을 입력하세요."></textarea>
-                <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
-            </div>
-            <div class="box-btn-posting">
-                <button class="btn-add" onclick="edit_posting()">등록</button>
-                <button class="btn-cancel" onclick="close_box()">닫기</button>
-            </div>
+            <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
+        </div>
+        <div class="box-btn-posting">
+            <button class="btn-add" onclick="edit_posting()">등록</button>
+            <button class="btn-cancel" onclick="close_box()">닫기</button>
         </div>
     </div>
-
 </div>
 
 </body>
