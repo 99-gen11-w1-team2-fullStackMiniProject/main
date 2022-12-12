@@ -1,7 +1,9 @@
 // 메인 페이지
-window.addEventListener('DOMContentLoaded', function(){ //페이지 로딩 후
-    listing('starbucks') //글 목록 출력
+
+$(document).ready(function () { //페이지 로딩 후 글 목록 출력
+    listing('starbucks')
 });
+
 function refresh(){ //새로고침
     window.location.reload();
 }
@@ -39,7 +41,7 @@ function posting(){
             },
             success: function (response) {
                 let doneMsg = response['msg']
-                if(doneMsg !== 'done'){ //완료 메세지가 없다면
+                if(doneMsg !== 'done'){
                     return false
                 }else{
                     refresh()
@@ -49,7 +51,7 @@ function posting(){
     }
 }
 
-function nowSelect(targetName){ //선택 스타일 적용 함수
+function nowSelect(targetName){
     const targetClass = `.nav-${targetName}`
     const targetA = document.querySelector(targetClass)
     const navBrands = document.querySelectorAll('.nav-brand-a')
@@ -63,22 +65,29 @@ function nowSelect(targetName){ //선택 스타일 적용 함수
 
 function listing(brandName){
     nowSelect(brandName)
+
     let brandView = brandName
+
     let boxUl = document.querySelector('#box-ul-list')
     let temp_html = ''
     boxUl.innerHTML = '' //리스트 초기화
+
     $.ajax({
         type: 'GET',
         url: '/posts',
         data: {},
         success: function (response) {
+
             let row = response['result']
+            console.log(row)
+
             let imgSrc = '/static/images/png'
+
             for(let i=0; i<row.length; i++){
-                let getBrand = row[i]['brand']
-                let getItem = row[i]['item']
-                let getDesc = row[i]['desc']
-                if(getBrand === brandView){ //클릭한 브랜드명과 일치하는 값만 출력
+                let getBrand = row[i][1] // brand
+                let getItem = row[i][2] // item
+                let getDesc = row[i][3] // desc
+                if(getBrand === brandView){
                     console.log('brandView : ', brandView)
                     temp_html = `<li class="li-item">
                                     <a href="#">
