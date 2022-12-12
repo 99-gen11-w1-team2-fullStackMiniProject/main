@@ -285,6 +285,7 @@ def likeToggle():
 
     return jsonify({'likeToggle': postIndex_receive + ' '+nickName_receive})
 
+# 삭제
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
