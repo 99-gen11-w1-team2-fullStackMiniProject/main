@@ -348,6 +348,15 @@ def likeToggle():
     return jsonify({'likeToggle': postIndex_receive + ' '})
 
 # 삭제
+@app.route("/delete", methods=["POST"])
+def delete_btn():
+    num = request.form['num_give']
+    print(type(num))
+    num1 = int(num)
+    db.post.delete_one({'num':num1})
+
+    return redirect(url_for("home"))
+
 
 
 
