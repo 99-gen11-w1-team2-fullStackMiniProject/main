@@ -18,43 +18,7 @@
     <meta charset="UTF-8">
 
     <script>
-        $(document).ready(function () {
-            listing();
-        });
 
-        function listing() {
-            $.ajax({
-                type: 'GET',
-                url: '/posts',
-                data: {},
-                success: function (response) {
-                    let rows = response['']
-                    for (let i = 0; i < rows.length; i++) {
-                        let brand = rows[i]['brand']
-                        let item = rows[i]['item']
-                        let desc = rows[i]['desc']
-
-                        let temp_html = ``
-                    }
-                }
-            });
-        }
-
-        function posting() {
-            let brand = $('#select-brand').val()
-            let item = $('#select-item').val()
-            let desc = $('#textarea-desc').val()
-
-            $.ajax({
-                type: "POST",
-                url: "/posts",
-                data: {brand_give: brand, item_give: item, desc_give: desc},
-                success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload()
-                }
-            });
-        }
 
         function edit() {
             $('#post-box').show()
@@ -108,12 +72,12 @@
             </div>
         </div>
         <div style="float: left; width: 100%; padding:10px;" class="box-btn-all">
-            <a href="/templates/index.html" class="btn btn-warning">Home</a>
+            <a href="/templates/main.html" class="btn btn-warning">Home</a>
             <button onclick="edit()" class="btn btn-outline-warning">수정</button>
             <button onclick="close_btn()" class="btn btn-outline-danger">삭제</button>
         </div>
     </div>
-    <div class="wrap-post" id="post-box">
+    <div class="wrap-post" id="post-box" >
         <div class="box-post">
             <div class="post-input box-brand input-group mb-3">
                 <label for="select-brand" class="input-group-text">브랜드</label>
