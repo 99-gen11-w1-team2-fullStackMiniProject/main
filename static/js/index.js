@@ -65,24 +65,32 @@ function nowSelect(targetName){
 
 function listing(brandName){
     nowSelect(brandName)
+
     let brandView = brandName
+
     let boxUl = document.querySelector('#box-ul-list')
     let temp_html = ''
     boxUl.innerHTML = '' //리스트 초기화
+
     $.ajax({
         type: 'GET',
         url: '/posts',
         data: {},
         success: function (response) {
+
             let row = response['result']
+            console.log(row)
+
             let imgSrc = '/static/images/png'
+
             for(let i=0; i<row.length; i++){
-                let getBrand = row[i]['brand']
-                let getItem = row[i]['item']
-                let getDesc = row[i]['desc']
+                let getBrand = row[i][1] // brand
+                let getItem = row[i][2] // item
+                let getDesc = row[i][3] // desc
                 if(getBrand === brandView){
                     console.log('brandView : ', brandView)
                     temp_html = `<li class="li-item">
+                                    <i class='i-like heart-blank'>🤍</i>
                                     <a href="#">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
                                         <span class="name-item">${getItem}</span>

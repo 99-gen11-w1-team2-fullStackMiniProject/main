@@ -1,14 +1,15 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 app = Flask(__name__)
-from pymongo import MongoClient
 
 import jwt #토큰생성용 패키지
 import datetime #시간관련 패키지
 import hashlib #해쉬함수용 패키지
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient("mongodb+srv://test:sparta@cluster0.053coum.mongodb.net/?retryWrites=true&w=majority")
-db = client.cofee
+# Database ============================================================================
+
+# mongoDB
+
 def usercheck(page_url):
     token_receive = request.cookies.get('mytoken')
     try:
@@ -22,9 +23,31 @@ def usercheck(page_url):
 
 
 #디비내용
+
+
+# mysql-connector-python package
+import mysql.connector
+
+mydb = mysql.connector.connect(
+    host="52.79.45.187",
+    user="hello",
+    passwd="mysqlserver",
+    database="coffee"
+)
+mycursor = mydb.cursor()
+
+
+# SERVER ============================================================================
+
+
 @app.route('/')
 def home():
    return render_template('login.html')
+
+
+@app.route('/main')
+def main_render():
+    return render_template('main.html')
 
 @app.route('/login')
 def login():
@@ -45,13 +68,29 @@ def api_register():
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-    db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
+    # mongoDB
+    # db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
+
+    # sql
+    sqlFormula = "INSERT INTO user (user_id, user_pw, user_name) VALUES (%s, %s, %s)"
+    newUser = (id_receive, pw_hash, nickname_receive)
+    mycursor.execute(sqlFormula, newUser)
+    mydb.commit()
 
     return jsonify({'result': 'success'})
 #중복확인api
 @app.route('/api/confrepet', methods=['GET'])
 def api_confrepet():
-    nick_id_list = list(db.user.find({},{'_id':False,'pw':False}))
+
+    # mongoDB
+    # nick_id_list = list(db.user.find({},{'_id':False,'pw':False}))
+
+    # mysql
+    sql = "SELECT user_name FROM user"
+    mycursor.execute(sql)
+    myresult = mycursor.fetchall()
+
+    nick_id_list = myresult
 
     return jsonify({'nick_id_list': nick_id_list})
 
@@ -63,39 +102,64 @@ def api_login():
 
     #pw암호화
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-    result = db.user.find_one({'id': id_receive, 'pw': pw_hash})
 
-    # 찾으면 JWT 토큰을 만들어 발급합니다.
-    if result is not None:
+    # mongodb
+    # result = db.user.find_one({'id': id_receive, 'pw': pw_hash})
+
+    # mysql
+    sql = "SELECT * FROM user WHERE user_id = %s"
+    mycursor.execute(sql, (id_receive, ))
+    myresult = mycursor.fetchall()
+
+    # 아이디 조회 시, 없을 경우 []리턴, 있을 경우 [(id, user_id, user_pw, user_nickname)] 형식으로 리턴
+
+    if (len(myresult) == 0) : #길이가 0이라는것은 아이디를 조회했은떄
+        return jsonify({'result': 'fail', 'msg': '아이디가 없네요.'})
+    if (myresult[0][2] == pw_hash):
         # JWT 토큰에는, payload와 시크릿키가 필요합니다.
         # 시크릿키가 있어야 토큰을 디코딩(=풀기) 해서 payload 값을 볼 수 있습니다.
         # 아래에선 id와 exp를 담았습니다. 즉, JWT 토큰을 풀면 유저ID 값을 알 수 있습니다.
         # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 납니다.
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=10)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         # token을 줍니다.
-        return jsonify({'result': 'success','nick':result['nick'], 'token': token})
+        return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
-
+@app.route('/nick', methods=['GET'])
+def nick():
+    return render_template('nicktest.html')
 #유저정보확인api
 @app.route('/api/nick', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
+    # try:
+    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    #     userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
+    #     return jsonify({'result': 'success', 'nickname': userinfo['nick']})
+    # except jwt.ExpiredSignatureError:
+    #     # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
+    #     return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    # except jwt.exceptions.DecodeError:
+    #     return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
     try:
+        # token을 시크릿키로 디코딩(해독)
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        print(payload)
-        userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
-        return jsonify({'result': 'success', 'nickname': userinfo['nick']})
+        # mysql ------------------------------------------------------
+        sql = "SELECT * FROM user WHERE user_id = %s"
+        mycursor.execute(sql, (payload['id'],))
+        myresult = mycursor.fetchall()
+        return jsonify({'result': 'success', 'nickname': myresult[0][3]})
+    # 만료 시간 지날 경우
     except jwt.ExpiredSignatureError:
-        # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
-        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+        return jsonify({'result': 'fail', 'msg': '로그인 시간 만료!!'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 #마이페이지 렌더링
@@ -104,15 +168,9 @@ def mypage():
     page_url="mypage.html"
     a = usercheck(page_url)
     return a
-    # token_receive = request.cookies.get('mytoken')
-    # try:
-    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    #     user = db.user.find_one({'id': payload['id']})
-    #     return render_template(page_url, nick = user['nick'])
-    # except jwt.ExpiredSignatureError:
-    #     return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-    # except jwt.exceptions.DecodeError:
-    #     return redirect(url_for("login", msg="로그인정보가 없습니다"))
+
+
+
 
 
 
@@ -127,12 +185,39 @@ def withdraw():
 @app.route('/api/withdraw', methods=['POST'])
 def api_withdraw():
     id_receive = request.form['id_give']
-    pw_receive = request.form['pw-give']
+    pw_receive = request.form['pw_give']
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-    result = db.user.find({'id':id_receive,'pw':pw_hash})
-    if result is not None:
-        db.user.delete_one({'id':id_receive})
+
+    # mongoDB 조회
+    # result = db.user.find({'id':id_receive,'pw':pw_hash})
+
+
+    # mysql 아이디 비밀번호 동일 조회
+
+    sql = "SELECT * FROM user WHERE user_id = %s AND user_pw = %s"
+    mycursor.execute(sql, (id_receive, pw_hash))
+
+    myresult = mycursor.fetchall()
+
+    # 아이디 조회 시, 없을 경우 []리턴, 있을 경우 [(id, user_id, user_pw, user_nickname)] 형식으로 리턴
+
+    if (len(myresult) == 0) :
+        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+
+    if myresult is not None:
+
+        # mongoDB 삭제
+        # db.user.delete_one({'id':id_receive})
+
+        # 삭제
+        id_give = id_receive
+        pw_give = pw_hash
+
+        sql = "DELETE FROM user WHERE user_id = %s AND user_pw = %s"
+        mycursor.execute(sql, (id_give, pw_give))
+        mydb.commit()
+
         return jsonify({'msg': '탈퇴완료'})
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -146,28 +231,41 @@ def posts():
     item_receive = request.form['item_give']
     desc_receive = request.form['desc_give']
 
-    doc = {
-        'brand':brand_receive,
-        'item':item_receive,
-        'desc':desc_receive
-    }
+    # mongodb
+    # doc = {
+    #     'brand':brand_receive,
+    #     'item':item_receive,
+    #     'desc':desc_receive
+    # }
+    # db.user.insert_one(doc)
+    # print(brand_receive, item_receive, desc_receive)
 
-    db.user.insert_one(doc)
-    print(brand_receive, item_receive, desc_receive)
+    # sql insert
+    # - article_brand
+    # - article_item
+    # - article_desc
+    # - article_author
+    # - article_like_count
+
+    sqlFormula = "INSERT INTO article (article_brand, article_item, article_desc) VALUES (%s, %s, %s)"
+    newArticle = (brand_receive, item_receive, desc_receive)
+    mycursor.execute(sqlFormula, newArticle)
+    mydb.commit()
+
     return jsonify({'msg':'done'})
 
 #글 목록
 @app.route('/posts', methods=["GET"])
 def post_list():
-    print('리스트 파이썬')
-    post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
+    # mongoDB
+    # post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
+
+    mycursor.execute("SELECT * FROM article")
+    # fetch all from last execution
+    post_list = mycursor.fetchall()
+
     print(post_list)
     return jsonify({'result':post_list})
-
-@app.route('/main')
-def main():
-    return render_template('main.html')
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

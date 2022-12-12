@@ -72,28 +72,47 @@
             }
         }
         function check_nick(){
+
             let nick = $('#usernick').val()
+
             $.ajax({
                 type:"GET",
                 url:"/api/confrepet",
                 data:{},
                 success:function(response){
                     let nick_list = response['nick_id_list']
+                    console.log(nick_list);
+
                     if(nick_list.length==0){
                         $('#nickcheck').val("check")
                     }
+
                     for (let i = 0; i < nick_list.length; i++) {
-                        if (nick != nick_list[i]['nick']) {
-                            $('#nickcheck').val("check")
-                        } else {
-                            $('#nickcheck').val("uncheck")
-                            alert("동일한 닉네임이 있습니다")
-                            break;
+                        console.log(nick_list[i])
+
+                        // nick 있는 경우
+                        if (nick_list[i][0] == nick) {
+                            $('#nickcheck').val() == "uncheck"
+                            alert("이미 있는 아이디 불가합니다")
+                            return;
                         }
+                        // nick 없는 경우
+
+                        // if (nick != nick_list[i]['nick']) {
+                        //     $('#nickcheck').val("check")
+                        // } else {
+                        //     $('#nickcheck').val("uncheck")
+                        //     alert("동일한 닉네임이 있습니다")
+                        //     break;
+                        // }
                     }
-                    if($('#nickcheck').val() == "check"){
-                        alert("사용가능합니다")
-                    }
+                    $('#nickcheck').val("check")
+                    alert("사용가능한 닉네임입니다 😃")
+
+
+                    // if($('#nickcheck').val() == "check"){
+                    //     alert("사용가능합니다")
+                    // }
                 }
             })
         }
@@ -167,5 +186,6 @@
             <button class="button is-large" onclick="location.hreg='/login'">back</button>
         </div>
     </div>
+<script type="text/javascript" src="/static/js/signup.js"></script>
 </body>
 </html>
