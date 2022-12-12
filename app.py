@@ -1,20 +1,21 @@
+import hashlib  # 해쉬함수용 패키지
+import datetime  # 시간관련 패키지
+import jwt  # 토큰생성용 패키지
+import mysql.connector
+from pymongo import MongoClient
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
-import jwt #토큰생성용 패키지
-import datetime #시간관련 패키지
-import hashlib #해쉬함수용 패키지
 SECRET_KEY = 'SPARTA'
 
 # Database ============================================================================
 
 # mongoDB
-from pymongo import MongoClient
-client = MongoClient("mongodb+srv://thursdaycurryboy:thursdaylove@cluster0.053coum.mongodb.net/?retryWrites=true&w=majority")
+client = MongoClient(
+    "mongodb+srv://thursdaycurryboy:thursdaylove@cluster0.053coum.mongodb.net/?retryWrites=true&w=majority")
 db = client.cofee
 
 # mysql-connector-python package
-import mysql.connector
 
 mydb = mysql.connector.connect(
     host="52.79.45.187",
@@ -29,11 +30,13 @@ mycursor = mydb.cursor()
 
 @app.route('/')
 def home():
-   return render_template('login.html')
+    return render_template('login.html')
+
 
 @app.route('/main')
 def main_render():
     return render_template('main.html')
+
 
 @app.route('/login')
 def login():
@@ -41,11 +44,14 @@ def login():
     return render_template('login.html', msg=msg)
     # return render_template('login.html')
 
+
 @app.route('/signup')
 def register():
     return render_template('signup.html')
 
-#회원가입api
+# 회원가입api
+
+
 @app.route('/api/signup', methods=['POST'])
 def api_register():
     id_receive = request.form['id_give']
@@ -64,7 +70,9 @@ def api_register():
     mydb.commit()
 
     return jsonify({'result': 'success'})
-#중복확인api
+# 중복확인api
+
+
 @app.route('/api/confrepet', methods=['GET'])
 def api_confrepet():
 
@@ -80,13 +88,15 @@ def api_confrepet():
 
     return jsonify({'nick_id_list': nick_id_list})
 
-#로그인 api
+# 로그인 api
+
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
 
-    #pw암호화
+    # pw암호화
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
     # mongodb
@@ -100,7 +110,7 @@ def api_login():
 
     # 아이디 조회 시, 없을 경우 []리턴, 있을 경우 [(id, user_id, user_pw, user_nickname)] 형식으로 리턴
 
-    if (len(myresult) == 0) :
+    if (len(myresult) == 0):
         return jsonify({'result': 'fail', 'msg': '아이디가 없네요.'})
 
     # 찾으면 JWT 토큰을 만들어 발급합니다.
@@ -124,7 +134,7 @@ def api_login():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
-#유저정보확인api
+# 유저정보확인api
 @app.route('/api/nick', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
@@ -166,10 +176,13 @@ def api_valid():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '해당 로그인 정보는 찾을 수 없습니다'})
 
+
 @app.route('/withdraw')
 def withdraw():
     return render_template('withdraw.html')
-#회원탈퇴
+# 회원탈퇴
+
+
 @app.route('/api/withdraw', methods=['POST'])
 def api_withdraw():
     id_receive = request.form['id_give']
@@ -180,7 +193,6 @@ def api_withdraw():
     # mongoDB 조회
     # result = db.user.find({'id':id_receive,'pw':pw_hash})
 
-
     # mysql 아이디 비밀번호 동일 조회
 
     sql = "SELECT * FROM user WHERE user_id = %s AND user_pw = %s"
@@ -190,7 +202,7 @@ def api_withdraw():
 
     # 아이디 조회 시, 없을 경우 []리턴, 있을 경우 [(id, user_id, user_pw, user_nickname)] 형식으로 리턴
 
-    if (len(myresult) == 0) :
+    if (len(myresult) == 0):
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
     if myresult is not None:
@@ -211,13 +223,14 @@ def api_withdraw():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
-#*메인 페이지
-#글 작성
+# *메인 페이지
+# 글 작성
 @app.route('/posts', methods=["POST"])
 def posts():
     brand_receive = request.form['brand_give']
     item_receive = request.form['item_give']
     desc_receive = request.form['desc_give']
+    author_receive = request.form['author_give']
 
     # mongodb
     # doc = {
@@ -235,14 +248,16 @@ def posts():
     # - article_author
     # - article_like_count
 
-    sqlFormula = "INSERT INTO article (article_brand, article_item, article_desc) VALUES (%s, %s, %s)"
-    newArticle = (brand_receive, item_receive, desc_receive)
+    sqlFormula = "INSERT INTO article (article_brand, article_item, article_desc, article_author) VALUES (%s, %s, %s, %s)"
+    newArticle = (brand_receive, item_receive, desc_receive, author_receive)
     mycursor.execute(sqlFormula, newArticle)
     mydb.commit()
 
-    return jsonify({'msg':'done'})
+    return jsonify({'msg': 'done'})
 
-#글 목록
+# 글 목록 출력
+
+
 @app.route('/posts', methods=["GET"])
 def post_list():
     # mongoDB
@@ -253,7 +268,16 @@ def post_list():
     post_list = mycursor.fetchall()
 
     print(post_list)
-    return jsonify({'result':post_list})
+    return jsonify({'result': post_list})
+
+
+@app.route('/like', methods=["POST"])
+def likeToggle():
+    postIndex_receive = request.form['postIndex_give']
+    nickName_receive = request.form['nickName_give']
+
+    return jsonify({'likeToggle': postIndex_receive + ' '+nickName_receive})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
