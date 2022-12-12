@@ -150,21 +150,12 @@ def api_login():
 @app.route('/nick', methods=['GET'])
 def nick():
     return render_template('nicktest.html')
-# 유저정보확인api
+
 
 
 @app.route('/api/nick', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
-    # try:
-    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    #     userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
-    #     return jsonify({'result': 'success', 'nickname': userinfo['nick']})
-    # except jwt.ExpiredSignatureError:
-    #     # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
-    #     return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
-    # except jwt.exceptions.DecodeError:
-    #     return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
     try:
         # token을 시크릿키로 디코딩(해독)
@@ -288,16 +279,26 @@ def post_list():
 
     # 게시글에 좋아요 누른 사람 정보 가져오기
     # - article_id 기준으로 article - article_vote 테이블 조인해서 가져오기
-    mycursor.execute("SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
-    post_list = mycursor.fetchall()
+    # mycursor.execute("SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
+
 
     # 현재 user 토큰 가져오기
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     userId = payload['id']
+    print(userId)
 
-    print(post_list)
-    return jsonify({'result': post_list, 'userId': userId})
+    mycursor.execute("SELECT * FROM article")
+    all_articles = mycursor.fetchall()
+
+    mycursor.execute(f"SELECT article_id FROM article_vote WHERE user_id = '{userId}'")
+    favorite_articles = mycursor.fetchall()
+
+
+    return jsonify({
+        'all_articles': all_articles,
+        'favorite_articles': favorite_articles,
+        'userId': userId})
 
 
 @app.route('/like', methods=["POST"])
@@ -305,9 +306,6 @@ def likeToggle():
 
     # 좋아요 누른 게시글 index
     postIndex_receive = request.form['postIndex_give']
-
-    # 닉네임 대신 ID에서 가져오는 걸로 수정함
-    # nickName_receive = request.form['nickName_give']
 
     # 좋아요 누른 ID: 토큰에서 아이디 정보 얻기
     token_receive = request.cookies.get('mytoken')
