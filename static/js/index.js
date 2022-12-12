@@ -118,7 +118,6 @@ function listing(brandName){
     })
 }
 
-
 function likeToggle(indexNum){
     let postIndex = indexNum
     let likeNick = nickName
