@@ -12,6 +12,9 @@
       function withdraw(){
         let id = $('#userid').val()
         let pw = $('#userpw').val()
+
+        console.log(id, pw)
+
         if(id != "" && pw != ""){
           $.ajax({
             type:'POST',
@@ -19,6 +22,7 @@
             data:{"id_give":id,"pw_give":pw},
             success:function(response){
               alert(response['msg'])
+              window.location.href = '/login'
             }
           })
         }else{
