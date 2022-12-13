@@ -101,7 +101,6 @@ function listing(brandName){
                 let getBrand = row[i][1] // brand
                 let getItem = row[i][2] // item
                 let getDesc = row[i][3] // desc
-                let getNick = row[i][3] // desc
 
                 let getIndex = row[i][0] // 게시글 고유 id 값
                 let liked = myFavorites.includes(row[i][0])
