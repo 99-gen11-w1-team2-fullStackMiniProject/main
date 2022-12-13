@@ -12,26 +12,31 @@
 </head>
 <body>
     <div class="top">
+        <h1 class="h1-logo">
+            <a href="/main" title="카페인 홈으로 이동"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
+        </h1>
         <div class="username">
             <h1>{{nick}}</h1>
         </div>
     </div>
     <div class="bottom">
         <div class="left">
-            <div class="menu-label"></div>
+            <div class="menu-label">mypage</div>
             <div class="menu">
-                <button class="button is-medium" onclick="location.href='/mypage'">좋아요 내역</a>
-                    <button class="button is-medium" onclick="location.href='/withdraw'">회원탈퇴</h1>
+                <button class="button is-mobile is-desktop" onclick="location.href='/mypage'">좋아요 내역</a>
+                <button class="button is-mobile is-desktop" onclick="location.href='/withdraw'">회원탈퇴</h1>
             </div>
         </div>
         <div class="right">
-            <section class="section-list">
-                <article class="article-item">
-                    <ul id="box-ul-list">
+            <div class="right-back">
+                <section class="section-list">
+                    <article class="article-item">
+                        <ul id="box-ul-list">
 
-                    </ul>
-                </article>
-            </section>
+                        </ul>
+                    </article>
+                </section>
+            </div>
         </div>
     </div>
 <script type="text/javascript" src="/static/js/mypage.js"></script>
