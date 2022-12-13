@@ -2,3 +2,48 @@
     background-color: #ccc0ae;
     color: white;
 }
+
+.title-h1{
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 48px;
+    font-weight: bold;
+    color: #000;
+}
+.wrap{
+    padding-top: 30px;
+}
+.box-wrap{
+    width: 30%;
+    margin: 0 auto;
+}
+.box-input-wrap{
+    margin-bottom: 15px;
+}
+.box-label{
+    width:135px;
+    min-width: 100px;
+}
+.box-input{
+    display: flex;
+}
+input::placeholder{
+    font-size: 14px;
+}
+.input-content{
+    width: 100%;
+}
+.btn-check{
+    margin-left: 15px;
+}
+.add-btn-box{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+.add-btn-box button{
+    margin-right: 10px;
+}
+.add-btn-box button:first-child{
+    background-color: coral;
+}

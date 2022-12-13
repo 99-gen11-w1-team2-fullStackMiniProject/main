@@ -60,7 +60,7 @@ header{
 .a-mypage::before {
     content: "/";
     position: relative;
-    left: 95px;
+    left: 92px;
     
 }
 .box-h2{
