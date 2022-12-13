@@ -107,13 +107,8 @@ function listing(brandName){
 
                 if(getBrand === brandView){
                     temp_html = `<li class="li-item ${getIndex}">
-<<<<<<< HEAD
-                                    <button class="btn-like" onclick="likeToggle(${getIndex}, '${brandView}')">${liked?'❤️':'🤍'}</button>
-                                    <a href="/detail">
-=======
                                     <button class="btn-like" onclick="likeToggle(${getIndex})" data-num="${getIndex}">${liked?'❤️':'🤍'}</button>
-                                    <a href="#">
->>>>>>> 8c7b5a395425daef690cf25ac5ba0320020b9521
+                                    <a href="/detail">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
                                         <span class="name-item">${getItem}</span>
                                         <span>${getDesc}</span>
