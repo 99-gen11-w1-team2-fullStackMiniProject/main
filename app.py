@@ -38,7 +38,6 @@ mycursor = mydb.cursor()
 
 # SERVER ============================================================================
 
-
 @app.route('/')
 def home():
     return render_template('login.html')
@@ -57,20 +56,17 @@ def login():
     return render_template('login.html', msg=msg)
     # return render_template('login.html')
 
-
 @app.route('/signup')
 def register():
     return render_template('signup.html')
 
 # 회원가입api
 
-
 @app.route('/api/signup', methods=['POST'])
 def api_signup():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
     nickname_receive = request.form['nickname_give']
-
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
     # sql
@@ -80,9 +76,9 @@ def api_signup():
     mydb.commit()
 
     return jsonify({'result': 'success'})
+
+
 # 중복확인api
-
-
 @app.route('/api/confrepet', methods=['GET'])
 def api_confrepet():
 
@@ -90,7 +86,6 @@ def api_confrepet():
     sql = "SELECT user_id,user_name FROM user"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
-
     id_nick_list = myresult
 
     return jsonify({'id_nick_list': id_nick_list})
@@ -156,9 +151,8 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간 만료!!'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
 # 마이페이지 렌더링
-
-
 @app.route('/mypage')
 def mypage():
     page_url = "mypage.html"
@@ -166,8 +160,6 @@ def mypage():
     return a
 
 # 마이페이지 좋아요 리스팅
-
-
 @app.route('/mypage/liked')
 def mypage_liked():
     # 유저가 누른 좋아요 가져오기
@@ -193,8 +185,6 @@ def mypage_liked():
     return jsonify({'article_list': list})
 
 # 회원탈퇴 렌더링
-
-
 @app.route('/withdraw')
 def withdraw():
     page_url = "withdraw.html"
@@ -202,8 +192,6 @@ def withdraw():
     return a
 
 # 회원탈퇴 api
-
-
 @app.route('/api/withdraw', methods=['POST'])
 def api_withdraw():
     id_receive = request.form['id_give']
@@ -280,7 +268,7 @@ def post_list():
     userId = payload['id']
     print(userId)
 
-    mycursor.execute("SELECT * FROM article")
+    mycursor.execute("SELECT * FROM article ORDER BY id DESC")
     all_articles = mycursor.fetchall()
 
     mycursor.execute(
