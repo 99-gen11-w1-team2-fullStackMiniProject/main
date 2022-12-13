@@ -28,16 +28,15 @@ def usercheck(page_url):
 
 # mysql-connector-python package
 mydb = mysql.connector.connect(
-    host= "52.79.45.187",
-    user= "hello",
-    passwd= "mysqlserver",
+    host="52.79.45.187",
+    user="hello",
+    passwd="mysqlserver",
     database="coffee"
 )
 mycursor = mydb.cursor()
 
 
 # SERVER ============================================================================
-
 
 @app.route('/')
 def home():
@@ -57,20 +56,17 @@ def login():
     return render_template('login.html', msg=msg)
     # return render_template('login.html')
 
-
 @app.route('/signup')
 def register():
     return render_template('signup.html')
 
 # 회원가입api
 
-
 @app.route('/api/signup', methods=['POST'])
 def api_signup():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
     nickname_receive = request.form['nickname_give']
-
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
     # sql
@@ -80,9 +76,9 @@ def api_signup():
     mydb.commit()
 
     return jsonify({'result': 'success'})
+
+
 # 중복확인api
-
-
 @app.route('/api/confrepet', methods=['GET'])
 def api_confrepet():
 
@@ -90,12 +86,13 @@ def api_confrepet():
     sql = "SELECT user_id,user_name FROM user"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
-
     id_nick_list = myresult
 
     return jsonify({'id_nick_list': id_nick_list})
 
 # 로그인 api
+
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
     id_receive = request.form['id_give']
@@ -125,7 +122,7 @@ def api_login():
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         print(type(token))
         # token을 줍니다.
-        return jsonify({'result': 'success', 'token': token.decode('utf8')})
+        return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -135,7 +132,6 @@ def api_login():
 @app.route('/nick', methods=['GET'])
 def nick():
     return render_template('nicktest.html')
-
 
 
 @app.route('/api/nick', methods=['GET'])
@@ -155,19 +151,18 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간 만료!!'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
 # 마이페이지 렌더링
-
-
 @app.route('/mypage')
 def mypage():
     page_url = "mypage.html"
     a = usercheck(page_url)
     return a
 
-#마이페이지 좋아요 리스팅
+# 마이페이지 좋아요 리스팅
 @app.route('/mypage/liked')
 def mypage_liked():
-    #유저가 누른 좋아요 가져오기
+    # 유저가 누른 좋아요 가져오기
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
@@ -178,7 +173,7 @@ def mypage_liked():
     mycursor.execute(sql, (payload['id'],))
     post_list = mycursor.fetchall()
 
-    list=[]
+    list = []
     for row in post_list:
         row[2]
         sql = "SELECT id, article_brand, article_item, article_desc, article_author FROM article WHERE id = %s"
@@ -186,9 +181,6 @@ def mypage_liked():
         article_list = mycursor.fetchall()
         if article_list != []:
             list.extend(article_list)
-
-
-
 
     return jsonify({'article_list': list})
 
@@ -276,10 +268,11 @@ def post_list():
     userId = payload['id']
     print(userId)
 
-    mycursor.execute("SELECT * FROM article")
+    mycursor.execute("SELECT * FROM article ORDER BY id DESC")
     all_articles = mycursor.fetchall()
 
-    mycursor.execute(f"SELECT article_id FROM article_vote WHERE user_id = '{userId}'")
+    mycursor.execute(
+        f"SELECT article_id FROM article_vote WHERE user_id = '{userId}'")
     favorite_articles = mycursor.fetchall()
 
     return jsonify({
@@ -293,6 +286,9 @@ def likeToggle():
 
     # 좋아요 누른 게시글 index
     postIndex_receive = request.form['postIndex_give']
+    likeDone = 0  # 좋아요 토글 기능
+    # 닉네임 대신 ID에서 가져오는 걸로 수정함
+    # nickName_receive = request.form['nickName_give']
 
     # 좋아요 누른 ID: 토큰에서 아이디 정보 얻기
     token_receive = request.cookies.get('mytoken')
@@ -308,7 +304,7 @@ def likeToggle():
     # like: DB에 like 이력이 없다면 이력 추가
     if len(myresult) == 0:
         print('좋아요 추가 완료')
-
+        likeDone = 1  # 좋아요 토글 기능
         sqlFormula = "INSERT INTO article_vote (user_id, article_id) VALUES (%s, %s)"
         likeLog = (userId, postIndex_receive)
         mycursor.execute(sqlFormula, likeLog)
@@ -317,11 +313,15 @@ def likeToggle():
     # unlike: DB 이력이 있다면 해당 이력 삭제
     else:
         print('좋아요 취소')
+        likeDone = 0
         sql = "DELETE FROM article_vote WHERE user_id = %s AND article_id = %s"
         mycursor.execute(sql, (userId, postIndex_receive))
         mydb.commit()
+    # vote 테이블에 저장
+    # 게시글 고유 번호, 좋아요 누른 사람 닉네임, done
 
-    return jsonify({'likeToggle': postIndex_receive + ' '})
+    return jsonify({'postIndex_receive': postIndex_receive, 'likeDone': likeDone})
+
 
 @app.route("/delete", methods=["POST"])
 def delete_btn():

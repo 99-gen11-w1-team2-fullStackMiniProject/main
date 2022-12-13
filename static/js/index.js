@@ -88,29 +88,26 @@ function listing(brandName){
         url: '/posts',
         data: {},
         success: function (response) {
-
             console.log(response)
             let row = response['all_articles']
             const myFavorites = response['favorite_articles'].flat(1);
+
             const userId = response['userId']
 
             let imgSrc = '/static/images/png'
 
             for(let i=0; i<row.length; i++){
 
-
-
                 let getBrand = row[i][1] // brand
                 let getItem = row[i][2] // item
                 let getDesc = row[i][3] // desc
-                let getNick = row[i][3] // desc
 
                 let getIndex = row[i][0] // 게시글 고유 id 값
                 let liked = myFavorites.includes(row[i][0])
 
                 if(getBrand === brandView){
                     temp_html = `<li class="li-item ${getIndex}">
-                                    <button class="btn-like" onclick="likeToggle(${getIndex}, '${brandView}')">${liked?'❤️':'🤍'}</button>
+                                    <button class="btn-like" onclick="likeToggle(${getIndex})" data-num="${getIndex}">${liked?'❤️':'🤍'}</button>
                                     <a href="#">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
                                         <span class="name-item">${getItem}</span>
@@ -124,16 +121,17 @@ function listing(brandName){
     })
 }
 
-function likeToggle(indexNum, likeBrand){
+function likeToggle(indexNum){
     let postIndex = indexNum
-    let getBrandName = likeBrand
     $.ajax({
         type: 'POST',
         url: '/like',
         data: {postIndex_give : postIndex},
-        success: function (response) {
-            console.log(response['likeToggle'])
-            listing(getBrandName)
+        success: function (response) { // lkieDone 값 리스폰 후 해당 선택자의 값 토글
+            let likeDone = response['likeDone']
+            let likeIcon = likeDone ? '❤️' : '🤍'
+            let isTarget = document.querySelector(`[data-num='${postIndex}']`)
+            isTarget.innerText = likeIcon            
         }
     })
 }
