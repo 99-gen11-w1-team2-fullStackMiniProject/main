@@ -125,7 +125,7 @@ def api_login():
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         print(type(token))
         # token을 줍니다.
-        return jsonify({'result': 'success', 'token': token})
+        return jsonify({'result': 'success', 'token': token.decode('utf8')})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -322,7 +322,6 @@ def likeToggle():
         mydb.commit()
 
     return jsonify({'likeToggle': postIndex_receive + ' '})
-
 
 @app.route("/delete", methods=["POST"])
 def delete_btn():
