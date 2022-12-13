@@ -88,16 +88,24 @@ function listing(brandName){
         url: '/posts',
         data: {},
         success: function (response) {
-            let row = response['result']
+            console.log(response)
+            let row = response['all_articles']
+            const myFavorites = response['favorite_articles'].flat(1);
+
             const userId = response['userId']
 
             let imgSrc = '/static/images/png'
+
             for(let i=0; i<row.length; i++){
+
                 let getBrand = row[i][1] // brand
                 let getItem = row[i][2] // item
                 let getDesc = row[i][3] // desc
+                let getNick = row[i][3] // desc
+
                 let getIndex = row[i][0] // 게시글 고유 id 값
-                let liked = (row[i][7] == userId)? 1 : 0;
+                let liked = myFavorites.includes(row[i][0])
+
                 if(getBrand === brandView){
                     temp_html = `<li class="li-item ${getIndex}">
                                     <button class="btn-like" onclick="likeToggle(${getIndex})" data-num="${getIndex}">${liked?'❤️':'🤍'}</button>

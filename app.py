@@ -15,12 +15,10 @@ def usercheck(page_url):
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
         sql = "SELECT * FROM user WHERE user_id = %s"
         mycursor.execute(sql, (payload['id'],))
         myresult = mycursor.fetchall()
         return render_template(page_url, nick=myresult[0][3])
-
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -68,15 +66,12 @@ def register():
 
 
 @app.route('/api/signup', methods=['POST'])
-def api_register():
+def api_signup():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
     nickname_receive = request.form['nickname_give']
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
-    # mongoDB
-    # db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
 
     # sql
     sqlFormula = "INSERT INTO user (user_id, user_pw, user_name) VALUES (%s, %s, %s)"
@@ -90,9 +85,6 @@ def api_register():
 
 @app.route('/api/confrepet', methods=['GET'])
 def api_confrepet():
-
-    # mongoDB
-    # nick_id_list = list(db.user.find({},{'_id':False,'pw':False}))
 
     # mysql
     sql = "SELECT user_id,user_name FROM user"
@@ -113,10 +105,6 @@ def api_login():
 
     # pw암호화
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-
-    # mongodb
-    # result = db.user.find_one({'id': id_receive, 'pw': pw_hash})
-
     # mysql
     sql = "SELECT * FROM user WHERE user_id = %s"
     mycursor.execute(sql, (id_receive, ))
@@ -137,7 +125,7 @@ def api_login():
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-
+        print(type(token))
         # token을 줍니다.
         return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
@@ -149,21 +137,11 @@ def api_login():
 @app.route('/nick', methods=['GET'])
 def nick():
     return render_template('nicktest.html')
-# 유저정보확인api
 
 
 @app.route('/api/nick', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
-    # try:
-    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    #     userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
-    #     return jsonify({'result': 'success', 'nickname': userinfo['nick']})
-    # except jwt.ExpiredSignatureError:
-    #     # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
-    #     return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
-    # except jwt.exceptions.DecodeError:
-    #     return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
     try:
         # token을 시크릿키로 디코딩(해독)
@@ -187,8 +165,36 @@ def mypage():
     a = usercheck(page_url)
     return a
 
+# 마이페이지 좋아요 리스팅
+
+
+@app.route('/mypage/liked')
+def mypage_liked():
+    # 유저가 누른 좋아요 가져오기
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+    # - article_id 기준으로 article - article_vote 테이블 조인해서 가져오기
+    #mycursor.execute("SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
+    #mycursor.execute("SELECT * FROM article_vote WHERE user_id = %s")
+    sql = "SELECT * FROM article_vote WHERE user_id = %s"
+    mycursor.execute(sql, (payload['id'],))
+    post_list = mycursor.fetchall()
+
+    list = []
+    for row in post_list:
+        row[2]
+        sql = "SELECT id, article_brand, article_item, article_desc, article_author FROM article WHERE id = %s"
+        mycursor.execute(sql, (row[2],))
+        article_list = mycursor.fetchall()
+        if article_list != []:
+            list.extend(article_list)
+
+    return jsonify({'article_list': list})
 
 # 회원탈퇴 렌더링
+
+
 @app.route('/withdraw')
 def withdraw():
     page_url = "withdraw.html"
@@ -205,26 +211,13 @@ def api_withdraw():
 
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-    # mongoDB 조회
-    # result = db.user.find({'id':id_receive,'pw':pw_hash})
-
     # mysql 아이디 비밀번호 동일 조회
-
     sql = "SELECT * FROM user WHERE user_id = %s AND user_pw = %s"
     mycursor.execute(sql, (id_receive, pw_hash))
-
     myresult = mycursor.fetchall()
 
     # 아이디 조회 시, 없을 경우 []리턴, 있을 경우 [(id, user_id, user_pw, user_nickname)] 형식으로 리턴
-
-    if (len(myresult) == 0):
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
-
-    if myresult is not None:
-
-        # mongoDB 삭제
-        # db.user.delete_one({'id':id_receive})
-
+    if (len(myresult) != 0):
         # 삭제
         id_give = id_receive
         pw_give = pw_hash
@@ -280,24 +273,24 @@ def posts():
 
 @app.route('/posts', methods=["GET"])
 def post_list():
-    # mongoDB
-    # post_list = list(db.user.find({}, {'_id': False, 'id' : False, 'nick' : False, 'pw' : False}))
-
-    # mycursor.execute("SELECT * FROM article")
-
-    # 게시글에 좋아요 누른 사람 정보 가져오기
-    # - article_id 기준으로 article - article_vote 테이블 조인해서 가져오기
-    mycursor.execute(
-        "SELECT * FROM article LEFT JOIN article_vote ON article.id = article_vote.article_id")
-    post_list = mycursor.fetchall()
 
     # 현재 user 토큰 가져오기
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     userId = payload['id']
+    print(userId)
 
-    print(post_list)
-    return jsonify({'result': post_list, 'userId': userId})
+    mycursor.execute("SELECT * FROM article")
+    all_articles = mycursor.fetchall()
+
+    mycursor.execute(
+        f"SELECT article_id FROM article_vote WHERE user_id = '{userId}'")
+    favorite_articles = mycursor.fetchall()
+
+    return jsonify({
+        'all_articles': all_articles,
+        'favorite_articles': favorite_articles,
+        'userId': userId})
 
 
 @app.route('/like', methods=["POST"])
@@ -305,7 +298,7 @@ def likeToggle():
 
     # 좋아요 누른 게시글 index
     postIndex_receive = request.form['postIndex_give']
-    likeDone = 0
+    likeDone = 0  # 좋아요 토글 기능
     # 닉네임 대신 ID에서 가져오는 걸로 수정함
     # nickName_receive = request.form['nickName_give']
 
@@ -323,7 +316,7 @@ def likeToggle():
     # like: DB에 like 이력이 없다면 이력 추가
     if len(myresult) == 0:
         print('좋아요 추가 완료')
-        likeDone = 1
+        likeDone = 1  # 좋아요 토글 기능
         sqlFormula = "INSERT INTO article_vote (user_id, article_id) VALUES (%s, %s)"
         likeLog = (userId, postIndex_receive)
         mycursor.execute(sqlFormula, likeLog)
@@ -336,17 +329,10 @@ def likeToggle():
         sql = "DELETE FROM article_vote WHERE user_id = %s AND article_id = %s"
         mycursor.execute(sql, (userId, postIndex_receive))
         mydb.commit()
-
-    # done 값을 찾아서
-    # done 이 0 이면 1로 수정
-    # done 이 1 이면 0으로 수정
-
     # vote 테이블에 저장
     # 게시글 고유 번호, 좋아요 누른 사람 닉네임, done
 
     return jsonify({'postIndex_receive': postIndex_receive, 'likeDone': likeDone})
-
-# 삭제
 
 
 @app.route("/delete", methods=["POST"])
