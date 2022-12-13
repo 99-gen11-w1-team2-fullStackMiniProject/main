@@ -12,12 +12,17 @@ ONE SHOT ONE DRINK는 유저들이 웹상에서 함께 만들어가는 비밀 �
 
 https://github.com/99-gen11-w1-team2-fullStackMiniProject  
 
-<hr>  
 
 ## 목차
-[1.팀 소개](#팀)
-
-<hr>  
+1. [팀 소개](#팀)
+2. [핵심기능](#핵심기능)
+3. [기술스택](#기술스택)
+4. [피드백](#피드백)
+5. [개발 API](#개발 API)
+6. [디렉토리 구조](#디렉토리 구조)
+7. [와이어프레임](#와이어프레임)
+8. [ERD](#ERD)
+9. [Reference](#Reference)
   
 ## 팀
 항해 99 11기 2주차 풀스택 미니 프로젝트 2조(2022-12-09 ~ 12-13)  
@@ -38,9 +43,8 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
 ### Mysql DB(🫙)
 - 기능 : AWS 상에 mysql 설치후 mysql-connector-python으로 DB 제어하는 기능 
 
-<hr>  
   
-## 기술 스택  
+## 기술스택  
  <div align=center> <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"> <br> <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white"> <br>   
   
   
