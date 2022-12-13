@@ -323,24 +323,6 @@ def likeToggle():
 
     return jsonify({'likeToggle': postIndex_receive + ' '})
 
-
-<<<<<<< HEAD
-#  수정기능
-@app.route('/deit', methods=['POST'])
-def edit_posting():
-    brand = request.form['brand_give']
-    desc = request.form['desc_give']
-    image = request.form['image_give']
-    item = request.form['item_give']
-    index = request.form['index_give']
-    nick = request.form['nick_give']
-    db.posts.update_one({"_id": user(id)}, {'$set': {'brand': brand, 'desc': desc, 'image': image, 'item': item, 'index': index, 'nick':nick}})
-    return jsonify({'msg': '업데이트 완료'})
-
-
-# 삭제
-=======
->>>>>>> d8976162998e65c72edc1883429d406b378359ab
 @app.route("/delete", methods=["POST"])
 def delete_btn():
     num = request.form['num_give']
