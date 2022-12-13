@@ -18,8 +18,8 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
 2. [핵심기능](#핵심기능)
 3. [기술스택](#기술스택)
 4. [피드백](#피드백)
-5. [개발 API](#개발 API)
-6. [디렉토리 구조](#디렉토리 구조)
+5. [개발 API](#개발API)
+6. [디렉토리 구조](#디렉토리구조)
 7. [와이어프레임](#와이어프레임)
 8. [ERD](#ERD)
 9. [Reference](#Reference)
@@ -89,7 +89,7 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
 
   
   
-## 개발 API  
+## 개발API  
   
 | Feature        | Method | URL           |  
 | -------------- | ------ | ------------- |  
@@ -101,7 +101,7 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
 | 회원 탈퇴      | POST   | /api/withdraw |  
   
   
-## 디렉토리 구조  
+## 디렉토리구조  
 ```  
 ├── README.md  
 ├── app.py  
