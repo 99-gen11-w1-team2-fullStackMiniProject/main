@@ -4,14 +4,19 @@
 ### 나만의 비밀 주문 레시피를 공유하세요  
   
 ![team logo](https://user-images.githubusercontent.com/87453411/207237871-4d55c769-3ea1-4188-89f7-bbabc7bbef35.jpg)  
-  
+
+
 '돼지바 프라프치노', '아샷추', '크리미 모카라떼'.  
 메뉴에는 없지만 일부 사람들만 알고 주문하는 비밀의 레시피 입니다. 저희 팀은 식음료를 사랑하는 사람이라면 누구나 자신만의 커스텀 레시피가 있지 않을까라는 질문에서 이 프로젝트를 시작했습니다.
 
 ONE SHOT ONE DRINK는 유저들이 웹상에서 함께 만들어가는 비밀 주문 레시피 사전입니다. 유저들이 자신의 비밀 레시피를 브랜드 기준으로 기록할 수 있는 기능과 함께 다른 유저들이 기록한 레시피를 한 눈에 모아몰 수 있는 서비스를 제공합니다.    
 
-https://github.com/99-gen11-w1-team2-fullStackMiniProject  
+#### github
+- https://github.com/99-gen11-w1-team2-fullStackMiniProject
 
+#### Youtube
+[![Watch the video](https://user-images.githubusercontent.com/87453411/207276098-7f5f83b4-ef48-4297-a375-139adbdcc299.gif)](https://youtu.be/AzENyRkr7t8)
+  
 
 ## 목차
 1. [팀 소개](#팀)
@@ -148,7 +153,22 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
 프렌차이즈 비밀메뉴 관련  
 - https://www.joongang.co.kr/article/8595110#home  
 - https://m.blog.naver.com/shgkdms7777/222445174080  
-- https://m.blog.naver.com/oogaa107/222029584913  
+- https://m.blog.naver.com/oogaa107/222029584913
+
+JS
+- https://stackoverflow.com/questions/59637239/uncaught-domexception-failed-to-execute-queryselector-on-document-is-no
+
+AWS Mysql
+- https://velog.io/@bokiri409/MySQL%EC%9D%84-%EC%84%9C%EB%B2%84%EC%97%90-%EC%98%AC%EB%A0%A4%EB%B3%B4%EC%9E%90
+
+Python mysql
+- https://www.delftstack.com/ko/howto/python/python-pip-install-mysqldb/
+
+HTTP
+- https://korbillgates.tistory.com/210
+
+JWT
+- https://kibua20.tistory.com/69
 
 와이어프레임
 - https://excalidraw.com/
@@ -159,3 +179,4 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
 디자인 관련
 - https://www.brandcrowd.com/
 - https://www.miricanvas.com/
+- https://www.figma.com/
