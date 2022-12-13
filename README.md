@@ -55,16 +55,18 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
   
 ## 피드백  
   
-### 수정 완료  
+### 반영한 것
 - 회원정보 관련 Form 위치 수정. (피드백: 유저가 회원가입 또는 로그인 시 불편함은 없는지 고려할 것. 중앙정렬이 아니라 왜 우측으로 치우져있는가?)-   
 - 최신 글 우선 보여주기 기능. (피드백: 메인 화면 메인 화면에서 게시글 보여줄 때 최신 등록 글 기준 내림차순으로 보여줄 것. 왜 예전 글이 먼저 나오는가?)  
 - CTA 문구 유저 친화적으로 수정. ‘글 작성’ -> '레시피 자랑하기'  
 - 좋아요 클릭 시 화면 전체 리로드 방지  
-- 좋아요 클릭 시 해당 카테고리 리스트로 랜딩   
+- 좋아요 클릭 시 해당 카테고리 리스트로 랜딩
 
-### 수정 할 것  
-- DB 테이블 설계. (피드백: article_vote 또는 article 테이블에서 user 테이블 참조 시 user의 닉네임이 아니라 Primary Key인 user id를 기반으로 참조할 것. 추후 유저가 아이디를 바꾸거나 개명하는 경우를 고려하기 위함)  
-- 브랜드 카테고리 내 음료 카테고리 추가 분기  
+### 더 반영하고 싶은 부분
+- 브랜드 카테고리 내 음료 종류 세부 카테고리 추가
+- DB 테이블 설계. (피드백: article_vote 또는 article 테이블에서 user 테이블 참조 시 user의 닉네임이 아니라 Primary Key인 user id를 기반으로 참조할 것. 추후 유저가 아이디를 바꾸거나 개명하는 경우를 고려하기 위함)
+- API restful하게 재설계
+
   
   
 ## 개발 API  
@@ -127,7 +129,13 @@ https://github.com/99-gen11-w1-team2-fullStackMiniProject
 - https://www.joongang.co.kr/article/8595110#home  
 - https://m.blog.naver.com/shgkdms7777/222445174080  
 - https://m.blog.naver.com/oogaa107/222029584913  
-  
-  
+
+와이어프레임
+- https://excalidraw.com/
+
 문서 작성  
 - https://cocoon1787.tistory.com/689
+
+디자인 관련
+- https://www.brandcrowd.com/
+- https://www.miricanvas.com/
