@@ -28,9 +28,9 @@ def usercheck(page_url):
 
 # mysql-connector-python package
 mydb = mysql.connector.connect(
-    host= "52.79.45.187",
-    user= "hello",
-    passwd= "mysqlserver",
+    host="52.79.45.187",
+    user="hello",
+    passwd="mysqlserver",
     database="coffee"
 )
 mycursor = mydb.cursor()
@@ -96,6 +96,8 @@ def api_confrepet():
     return jsonify({'id_nick_list': id_nick_list})
 
 # 로그인 api
+
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
     id_receive = request.form['id_give']
@@ -125,7 +127,7 @@ def api_login():
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         print(type(token))
         # token을 줍니다.
-        return jsonify({'result': 'success', 'token': token.decode('utf8')})
+        return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -135,7 +137,6 @@ def api_login():
 @app.route('/nick', methods=['GET'])
 def nick():
     return render_template('nicktest.html')
-
 
 
 @app.route('/api/nick', methods=['GET'])
@@ -164,10 +165,12 @@ def mypage():
     a = usercheck(page_url)
     return a
 
-#마이페이지 좋아요 리스팅
+# 마이페이지 좋아요 리스팅
+
+
 @app.route('/mypage/liked')
 def mypage_liked():
-    #유저가 누른 좋아요 가져오기
+    # 유저가 누른 좋아요 가져오기
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
@@ -178,7 +181,7 @@ def mypage_liked():
     mycursor.execute(sql, (payload['id'],))
     post_list = mycursor.fetchall()
 
-    list=[]
+    list = []
     for row in post_list:
         row[2]
         sql = "SELECT id, article_brand, article_item, article_desc, article_author FROM article WHERE id = %s"
@@ -187,12 +190,11 @@ def mypage_liked():
         if article_list != []:
             list.extend(article_list)
 
-
-
-
     return jsonify({'article_list': list})
 
 # 회원탈퇴 렌더링
+
+
 @app.route('/withdraw')
 def withdraw():
     page_url = "withdraw.html"
@@ -200,6 +202,8 @@ def withdraw():
     return a
 
 # 회원탈퇴 api
+
+
 @app.route('/api/withdraw', methods=['POST'])
 def api_withdraw():
     id_receive = request.form['id_give']
@@ -279,7 +283,8 @@ def post_list():
     mycursor.execute("SELECT * FROM article")
     all_articles = mycursor.fetchall()
 
-    mycursor.execute(f"SELECT article_id FROM article_vote WHERE user_id = '{userId}'")
+    mycursor.execute(
+        f"SELECT article_id FROM article_vote WHERE user_id = '{userId}'")
     favorite_articles = mycursor.fetchall()
 
     return jsonify({
@@ -293,6 +298,9 @@ def likeToggle():
 
     # 좋아요 누른 게시글 index
     postIndex_receive = request.form['postIndex_give']
+    likeDone = 0  # 좋아요 토글 기능
+    # 닉네임 대신 ID에서 가져오는 걸로 수정함
+    # nickName_receive = request.form['nickName_give']
 
     # 좋아요 누른 ID: 토큰에서 아이디 정보 얻기
     token_receive = request.cookies.get('mytoken')
@@ -308,7 +316,7 @@ def likeToggle():
     # like: DB에 like 이력이 없다면 이력 추가
     if len(myresult) == 0:
         print('좋아요 추가 완료')
-
+        likeDone = 1  # 좋아요 토글 기능
         sqlFormula = "INSERT INTO article_vote (user_id, article_id) VALUES (%s, %s)"
         likeLog = (userId, postIndex_receive)
         mycursor.execute(sqlFormula, likeLog)
@@ -317,11 +325,15 @@ def likeToggle():
     # unlike: DB 이력이 있다면 해당 이력 삭제
     else:
         print('좋아요 취소')
+        likeDone = 0
         sql = "DELETE FROM article_vote WHERE user_id = %s AND article_id = %s"
         mycursor.execute(sql, (userId, postIndex_receive))
         mydb.commit()
+    # vote 테이블에 저장
+    # 게시글 고유 번호, 좋아요 누른 사람 닉네임, done
 
-    return jsonify({'likeToggle': postIndex_receive + ' '})
+    return jsonify({'postIndex_receive': postIndex_receive, 'likeDone': likeDone})
+
 
 @app.route("/delete", methods=["POST"])
 def delete_btn():
