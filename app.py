@@ -139,7 +139,7 @@ def api_login():
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         # token을 줍니다.
-        return jsonify({'result': 'success', 'token': token})
+        return jsonify({'result': 'success', 'token': token.decode('utf8')})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -345,9 +345,21 @@ def likeToggle():
 
     return jsonify({'likeToggle': postIndex_receive + ' '})
 
+
+#  수정기능
+@app.route('/deit', methods=['POST'])
+def edit_posting():
+    brand = request.form['brand_give']
+    desc = request.form['desc_give']
+    image = request.form['image_give']
+    item = request.form['item_give']
+    index = request.form['index_give']
+    nick = request.form['nick_give']
+    db.posts.update_one({"_id": user(id)}, {'$set': {'brand': brand, 'desc': desc, 'image': image, 'item': item, 'index': index, 'nick':nick}})
+    return jsonify({'msg': '업데이트 완료'})
+
+
 # 삭제
-
-
 @app.route("/delete", methods=["POST"])
 def delete_btn():
     num = request.form['num_give']
