@@ -15,7 +15,8 @@ ONE SHOT ONE DRINK는 유저들이 웹상에서 함께 만들어가는 비밀 �
 - https://github.com/99-gen11-w1-team2-fullStackMiniProject
 
 #### Youtube
-[![Watch the video](https://user-images.githubusercontent.com/87453411/207276098-7f5f83b4-ef48-4297-a375-139adbdcc299.gif)](https://youtu.be/AzENyRkr7t8)
+[![Watch the video](https://user-images.githubusercontent.com/87453411/207288996-2b387271-fca5-4f55-b850-6d2031fe6cb0.png)](https://youtu.be/AzENyRkr7t8)
+- https://youtu.be/AzENyRkr7t8
   
 
 ## 목차
