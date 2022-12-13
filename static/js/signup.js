@@ -1,44 +1,39 @@
 // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
 //아이디 중복확인, 비밀번호 확인
-// const reg_id = /허용하는 문자/
-// const reg_pw = /허용하는 문자/ 시간남으면 하자
+
+//아래는 아이디 패스워드 정규식 검색해서 넣음
+const reg_id = /^[a-z]+[a-z0-9]{4,}$/;
+const reg_pw = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 
 function check_id() {
-
     let id = $('#userid').val()
-    let space = id.includes(" ")
-
-    if (space == false && id.length >= 3) {
+    if(reg_id.test(id)){
         $.ajax({
-            type: "GET",
-            url: "/api/confrepet",
-            data: {},
-            success: function (response) {
-                let id_nick_list = response['id_nick_list']
-                for (let i = 0; i < id_nick_list.length; i++) {
-                    if (id == id_nick_list[i][0]) {
-                        $('#idcheck').val("uncheck")
-                        alert("동일한 아이디가 있습니다")
-                        return;
+                    type: "GET",
+                    url: "/api/confrepet",
+                    data: {},
+                    success: function (response) {
+                        let id_nick_list = response['id_nick_list']
+                        for (let i = 0; i < id_nick_list.length; i++) {
+                            if (id == id_nick_list[i][0]) {
+                                $('#idcheck').val("uncheck")
+                                alert("동일한 아이디가 있습니다")
+                                return;
+                            }
+                        }
+                        $('#idcheck').val('check')
+                        alert("사용가능합니다")
                     }
-                }
-                $('#idcheck').val('check')
-                alert("사용가능합니다")
-            }
-        })
-    } else {
-        alert("아이디가 너무 짧거나 공백이있습니다.")
+                })
+    }else{
+        alert("아이디가 형식에 맞지않습니다")
     }
 }
 
 function signup() {
     let userpw = $('#userpw').val()
     let re_userpw = $('#re_userpw').val()
-    if(userpw.includes(" ")) {
-        alert("비밀번호를 입력하세요")
-        return;
-    }
-    if (userpw == re_userpw && $('#idcheck').val() == "check") {
+    if(reg_pw.test(userpw) && userpw == re_userpw && $('#idcheck').val() == "check" && $('#nickcheck').val() == "check" ){
         $.ajax({
             type: "POST",
             url: "/api/signup",
@@ -56,11 +51,9 @@ function signup() {
                 }
             }
         })
-    } else {
-        alert("비밀번호가 다르거나 아이디중복확인이필요")
+    }else{
+        alert("비밀번호가 형식에 맞지 않거나 아이디중복확인이필요")
     }
-
-
 }
 
 function check_nick() {

@@ -28,9 +28,9 @@ def usercheck(page_url):
 
 # mysql-connector-python package
 mydb = mysql.connector.connect(
-    host="52.79.45.187",
-    user="hello",
-    passwd="mysqlserver",
+    host= "52.79.45.187",
+    user= "hello",
+    passwd= "mysqlserver",
     database="coffee"
 )
 mycursor = mydb.cursor()
@@ -123,7 +123,7 @@ def api_login():
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-
+        print(type(token))
         # token을 줍니다.
         return jsonify({'result': 'success', 'token': token.decode('utf8')})
     # 찾지 못하면

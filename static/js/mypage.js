@@ -37,11 +37,18 @@ function listing(){
                     // done 0 일때
 
                     temp_html = `<li class="li-item ${getIndex}">
-                                    <a href="#">
-                                        <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
-                                        <span class="name-item">${getItem}</span>
-                                        <span>${getDesc}</span>
-                                    </a>
+                                   <div class="item-wrap">
+                                       <div class="img">
+                                           <a href="#">
+                                                <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
+                                           </a> 
+                                       </div>        
+                                       <div class="mypage-content">
+                                          <p><span class="name-item">${getItem}</span></p>
+                                          <p><span>${getDesc}</span></p>
+                                       </div> 
+                                   </div>
+                                                                                                                                                         
                                 </li>`
                     // done 1 일때
                     boxUl.insertAdjacentHTML("afterbegin", temp_html)
