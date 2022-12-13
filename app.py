@@ -155,9 +155,8 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간 만료!!'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
 # 마이페이지 렌더링
-
-
 @app.route('/mypage')
 def mypage():
     page_url = "mypage.html"
@@ -322,6 +321,14 @@ def likeToggle():
         mydb.commit()
 
     return jsonify({'likeToggle': postIndex_receive + ' '})
+
+
+@app.route('/detail')
+def detail():
+    page_url = "detail.html"
+    a = usercheck(page_url)
+    return a
+
 
 @app.route("/delete", methods=["POST"])
 def delete_btn():
