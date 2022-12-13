@@ -15,44 +15,52 @@
 </head>
 
 <script>
+    <!--    페이지 로딩 후 글 목록 출력-->
     $(document).ready(function () {
         listing();
     });
 
     //상세내용불러오기
     function listing() {
+
+        $('#content-box').empty()
         $.ajax({
             type: 'GET',
-            url: '/posts={{ index }}',
+            url: '/detail/get',
             data: {},
             success: function (response) {
-                let rows = response['']
+                let imgSrc = '/static/images/png'
+                let rows = response['result']
+                    console.log(rows)
                 for (let i = 0; i < rows.length; i++) {
-                    let brand = rows[i]['comment']
-                    let item = rows[i]['name']
-                    let desc = rows[i]['desc']
-                    let nick = rows[i]['nick']
-                    let index = rows[i]['index']
+                    let brand = rows[i][1]
+                    let item = rows[i][2]
+                    let desc = rows[i][3]
+                    let nick = rows[i][5]
+                    let index = rows[i][0]
 
-
-                    let temp_html = `<thead>
+                    console.log(item)
+                    console.log(brand)
+                    console.log(desc)
+                    let temp_html = `<img src="${imgSrc}/${brand}-${item}.png" alt="${brand} ${item}">
+                                     <thead>
                                         <tr>
-                                            <th scope="col">no : ${index}</th>
+                                            <th scope="col">no :${index}</th>
                                         </tr>
-                                        </thead>
+                                    </thead>
                                     <tbody>
+
                                          <tr>
-                                            <th scope="row">유저 이름 : ${nick}</th>
+                                            <th scope="row">유저 이름 :${nick}</th>
                                         </tr>
                                         <tr>
-                                            <th scope="row">브랜드 이름 :  ${brand}</th>
+                                            <th scope="row">브랜드 이름 :${brand}</th>
                                         </tr>
                                         <tr>
-                                            <th scope="row">메뉴 이름 :  ${item}</th>
+                                            <th scope="row">메뉴 이름 :${item}</th>
                                         </tr>
                                         <tr>
-                                            <th scope="row">나만의 레시피 추가하기 :  ${desc}
-                                            </th>
+                                            <th scope="row">나만의 레시피 추가하기 :${desc}</th>
                                         </tr>
                                     </tbody>`
                     $('#content-box').append(temp_html)
@@ -125,7 +133,7 @@
 <div class="wrap">
     <header>
         <h1 class="h1-logo">
-            <a href="#" title="카페인 홈으로 이동" onclick="refresh()"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
+            <a href="/main" title="카페인 홈으로 이동" onclick="refresh()"><img src="/static/images/mug-hot-solid.svg" alt="카페인 로고"></a>
         </h1>
         <div class="box-info">
             <a href="/mypage" class="a-mypage" id="a-mypage" data-value="{{nick}}">마이페이지</a>
@@ -194,7 +202,7 @@
         <div class="post-input box-desc form-floating">
                 <textarea name="textarea-desc" class="form-control" id="textarea-desc" maxlength="100"
                           placeholder="하고 싶은 말을 입력하세요."></textarea>
-            <label for="textarea-desc">하고 싶은 말을 입력하세요.</label>
+            <label for="textarea-desc">나만의 커피 레시피는?☕</label>
         </div>
         <div class="box-btn-posting">
             <button class="btn btn-dark" onclick="edit_posting()">등록</button>

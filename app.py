@@ -279,6 +279,28 @@ def post_list():
         'all_articles': all_articles,
         'favorite_articles': favorite_articles,
         'userId': userId})
+global a_id
+a_id = 0
+@app.route('/api/detail', methods=["POST"])
+def detail_api():
+    global a_id
+    a_id = int(request.form['a_id'])
+    print(a_id)
+    return jsonify({"msg":"잘전달받음"})
+
+@app.route('/detail/get', methods=["GET"])
+def detail_get():
+    global a_id
+    #print(type(a_id))
+    sql = "SELECT * FROM article WHERE id = %s"
+    mycursor.execute(sql, (a_id,))
+    select_article = mycursor.fetchall()
+    print(select_article)
+    return jsonify({"result":select_article})
+
+@app.route('/detail')
+def detail():
+    return render_template('detail.html')
 
 
 @app.route('/like', methods=["POST"])
