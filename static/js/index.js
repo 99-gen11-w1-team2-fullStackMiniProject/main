@@ -88,7 +88,7 @@ function listing(brandName){
         url: '/posts',
         data: {},
         success: function (response) {
-            console.log(response)
+            // console.log(response)
             let row = response['all_articles']
             const myFavorites = response['favorite_articles'].flat(1);
 
@@ -104,11 +104,11 @@ function listing(brandName){
 
                 let getIndex = row[i][0] // 게시글 고유 id 값
                 let liked = myFavorites.includes(row[i][0])
-
+                //console.log(typeof(getIndex))
                 if(getBrand === brandView){
                     temp_html = `<li class="li-item ${getIndex}">
                                     <button class="btn-like" onclick="likeToggle(${getIndex})" data-num="${getIndex}">${liked?'❤️':'🤍'}</button>
-                                    <a href="/detail">
+                                    <a onclick="godetail(${getIndex})">
                                         <img src="${imgSrc}/${getBrand}-${getItem}.png" alt="${getBrand} ${getItem}">
                                         <span class="name-item">${getItem}</span>
                                         <span>${getDesc}</span>
@@ -140,4 +140,20 @@ function logout(){
     $.removeCookie('mytoken');
     alert('로그아웃!')
     window.location.href='/login'
+}
+
+function godetail(indexNum){
+    let article_id = indexNum
+    // let article_id = document.querySelector(`[data-num='${postIndex}']`)
+
+    $.ajax({
+        type:'POST',
+        url:'/api/detail',
+        data:{"a_id":article_id},
+        success:function(response){
+            alert(response['msg'])
+            location.href='/detail'
+        }
+    })
+
 }
