@@ -305,7 +305,7 @@ def likeToggle():
 
     # 좋아요 누른 게시글 index
     postIndex_receive = request.form['postIndex_give']
-
+    likeDone = 0
     # 닉네임 대신 ID에서 가져오는 걸로 수정함
     # nickName_receive = request.form['nickName_give']
 
@@ -323,7 +323,7 @@ def likeToggle():
     # like: DB에 like 이력이 없다면 이력 추가
     if len(myresult) == 0:
         print('좋아요 추가 완료')
-
+        likeDone = 1
         sqlFormula = "INSERT INTO article_vote (user_id, article_id) VALUES (%s, %s)"
         likeLog = (userId, postIndex_receive)
         mycursor.execute(sqlFormula, likeLog)
@@ -332,6 +332,7 @@ def likeToggle():
     # unlike: DB 이력이 있다면 해당 이력 삭제
     else:
         print('좋아요 취소')
+        likeDone = 0
         sql = "DELETE FROM article_vote WHERE user_id = %s AND article_id = %s"
         mycursor.execute(sql, (userId, postIndex_receive))
         mydb.commit()
@@ -343,7 +344,7 @@ def likeToggle():
     # vote 테이블에 저장
     # 게시글 고유 번호, 좋아요 누른 사람 닉네임, done
 
-    return jsonify({'likeToggle': postIndex_receive + ' '})
+    return jsonify({'postIndex_receive': postIndex_receive, 'likeDone': likeDone})
 
 # 삭제
 
